@@ -1,0 +1,32 @@
+{% extends '@EasyAdmin/page/login_minimal.html.twig' %}
+
+{% block body_class 'page-login' %}
+
+{% block wrapper_wrapper %}
+    {% include '@EasyAdmin/flash_messages.html.twig' %}
+
+    <div class="login-wrapper">
+        <header class="main-header">
+            <div id="header-logo">
+                {% block header_logo %}
+                    {% if page_title is defined %}
+                        {% if ea and ea.hasContext %}
+                            <a class="logo {{ page_title|length > 14 ? 'logo-long' }}" title="{{ page_title|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                                {{ page_title|raw }}
+                            </a>
+                        {% else %}
+                            <div class="logo {{ page_title|length > 14 ? 'logo-long' }}">
+                                {{ page_title|raw }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endblock header_logo %}
+            </div>
+        </header>
+
+        <section class="content">
+            {% block body %}{% endblock %}
+        </section>
+    </div>
+
+{% endblock %}
