@@ -9,10 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 trait StartEndDates
 {
     #[ORM\Column(name: 'starts_at', type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[Assert\Type('datetime')]
     #[Assert\LessThan(propertyPath: 'endsAt')]
     private \DateTimeImmutable $startsAt;
 
     #[ORM\Column(name: 'ends_at', type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[Assert\Type('datetime')]
     #[Assert\GreaterThan(propertyPath: 'startsAt')]
     private \DateTimeImmutable $endsAt;
 

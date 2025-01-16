@@ -1,7 +1,6 @@
 .form-fieldset-body.show > .row > [class*="col"] {
     width: 100%;
 }
-
-.field-collection-item:has([id^="Venue"]) {
-    border: solid 1px red;
+[data-form-type-name-placeholder="__floorsname__"] .form-widget {
+    background-color: rgba(128, 128, 128, 0.16);
 }

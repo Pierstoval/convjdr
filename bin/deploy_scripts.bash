@@ -19,6 +19,7 @@ composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader --apc
 php bin/console cache:clear --no-warmup
 php bin/console cache:warmup
 php bin/console assets:install --symlink --relative
+php bin/console assets-map:compile
 
 php bin/console doctrine:migrations:migrate --no-interaction
 

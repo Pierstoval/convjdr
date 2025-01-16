@@ -5,13 +5,18 @@ namespace App\Entity;
 use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room
 {
     use Field\Id { __construct as generateId; }
-    use Field\Name;
+
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Assert\NotBlank(message: 'Please enter a name')]
+    private ?string $name = '';
 
     #[ORM\ManyToOne(inversedBy: 'rooms')]
     private Floor $floor;
@@ -20,6 +25,7 @@ class Room
      * @var Collection<Table>
      */
     #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'room', cascade: ['persist', 'refresh'])]
+    #[Assert\Valid]
     private Collection $tables;
 
     public function __construct()
@@ -38,6 +44,16 @@ class Room
         foreach ($this->tables as $table) {
             $table->setRoom($this);
         }
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name ?: '';
     }
 
     public function getFloor(): Floor

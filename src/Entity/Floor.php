@@ -4,13 +4,18 @@ namespace App\Entity;
 
 use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Floor
 {
     use Field\Id;
-    use Field\Name;
+
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Assert\NotBlank(message: 'Please enter a name')]
+    private ?string $name = '';
 
     #[ORM\ManyToOne(inversedBy: 'floors')]
     private Venue $venue;
@@ -19,6 +24,7 @@ class Floor
      * @var Collection<Room>
      */
     #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'floor', cascade: ['persist', 'refresh'])]
+    #[Assert\Valid]
     private Collection $rooms;
 
     public function __toString(): string
@@ -32,6 +38,16 @@ class Floor
             $room->setFloor($this);
             $room->refreshNestedRelations();
         }
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name ?: '';
     }
 
     public function getVenue(): Venue

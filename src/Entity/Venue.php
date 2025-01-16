@@ -7,12 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventVenueRepository::class)]
 class Venue
 {
     use Field\Id { __construct as generateId; }
-    use Field\Name;
+
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[Assert\NotBlank(message: 'Please enter a name')]
+    private ?string $name = '';
+
 
     #[ORM\Column(type: Types::TEXT)]
     private string $address = '';
@@ -21,6 +26,7 @@ class Venue
      * @var Collection<Floor>
      */
     #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'venue', cascade: ['persist', 'refresh'])]
+    #[Assert\Valid]
     private Collection $floors;
 
     public function __construct()
@@ -29,12 +35,26 @@ class Venue
         $this->floors = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->name ?? '-Unnamed-';
+    }
     public function refreshNestedRelations(): void
     {
         foreach ($this->floors as $floor) {
             $floor->setVenue($this);
             $floor->refreshNestedRelations();
         }
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name ?: '';
     }
 
     public function getAddress(): string
