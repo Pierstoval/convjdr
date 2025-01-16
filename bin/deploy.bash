@@ -75,9 +75,9 @@ echo "[DEPLOY] > New version: ${NEW_VERSION}"
 echo "[DEPLOY] > New build date: ${NEW_DATE}"
 
 echo "RELEASE_VERSION=${NEW_VERSION}" > .env.prod.local
-echo "RELEASE_DATE=v${NEW_VERSION}" >> .env.prod.local
-composer dump-env prod
-rm rm .env.prod.local
+echo "RELEASE_DATE=v${NEW_DATE}" >> .env.prod.local
+php8.4 $(which composer) dump-env prod
+rm .env.prod.local
 
 echo "[DEPLOY] > Now generating changelogs..."
 
