@@ -12,12 +12,17 @@ class Table
     use Field\Id;
     use Field\Name;
 
-    #[ORM\Column]
-    private int $maxNumberOfParticipants = 1;
+    #[ORM\Column(nullable: true)]
+    private ?int $maxNumberOfParticipants = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'tables')]
     #[ORM\JoinColumn(nullable: false)]
     private Room $room;
+
+    public function __toString(): string
+    {
+        return $this->room.' - '.$this->name;
+    }
 
     public function getMaxNumberOfParticipants(): ?int
     {
@@ -26,7 +31,7 @@ class Table
 
     public function setMaxNumberOfParticipants(?int $maxNumberOfParticipants): void
     {
-        $this->maxNumberOfParticipants = $maxNumberOfParticipants ?: 1;
+        $this->maxNumberOfParticipants = $maxNumberOfParticipants;
     }
 
     public function getRoom(): Room

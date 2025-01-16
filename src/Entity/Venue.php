@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Field\Id;
-use App\Entity\Field\Name;
 use App\Repository\EventVenueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,8 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EventVenueRepository::class)]
 class Venue
 {
-    use Id { __construct as generateId; }
-    use Name;
+    use Field\Id { __construct as generateId; }
+    use Field\Name;
 
     #[ORM\Column(type: Types::TEXT)]
     private string $address = '';
@@ -22,7 +20,7 @@ class Venue
     /**
      * @var Collection<Floor>
      */
-    #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'venue')]
+    #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'venue', cascade: ['persist', 'refresh'])]
     private Collection $floors;
 
     public function __construct()
@@ -31,9 +29,12 @@ class Venue
         $this->floors = new ArrayCollection();
     }
 
-    public function __toString(): string
+    public function refreshNestedRelations(): void
     {
-        return $this->name;
+        foreach ($this->floors as $floor) {
+            $floor->setVenue($this);
+            $floor->refreshNestedRelations();
+        }
     }
 
     public function getAddress(): string
@@ -45,31 +46,35 @@ class Venue
     {
         $this->address = $address ?: '';
     }
+
+    /**
+     * @return Collection<Floor>
+     */
     public function getFloors(): Collection
     {
         return $this->floors;
     }
 
-    public function addSpace(Floor $space): void
+    public function addFloor(Floor $floor): void
     {
-        if ($this->floors->contains($space)) {
+        if ($this->floors->contains($floor)) {
             return;
         }
 
-        $this->floors->add($space);
+        $this->floors->add($floor);
     }
 
-    public function removeSpace(Floor $space): void
+    public function removeFloor(Floor $floor): void
     {
-        if (!$this->floors->contains($space)) {
+        if (!$this->floors->contains($floor)) {
             return;
         }
 
-        $this->floors->removeElement($space);
+        $this->floors->removeElement($floor);
     }
 
-    public function hasSpace(Floor $space): bool
+    public function hasFloor(Floor $floor): bool
     {
-        return $this->floors->contains($space);
+        return $this->floors->contains($floor);
     }
 }

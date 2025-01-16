@@ -15,15 +15,13 @@ class Event
     use Field\Name;
     use Field\Description;
     use Field\StartEndDates;
+    use Field\Enabled;
 
-    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    #[ORM\Column(name: 'address', type: Types::TEXT, nullable: false)]
     private string $address = '';
 
-    #[ORM\Column(nullable: false)]
+    #[ORM\Column(name: 'is_online_event', type: Types::BOOLEAN, nullable: false)]
     private bool $isOnlineEvent = false;
-
-    #[ORM\Column(nullable: false)]
-    private bool $enabled = false;
 
     #[ORM\ManyToOne]
     private Venue $venue;

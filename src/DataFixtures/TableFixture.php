@@ -50,8 +50,13 @@ class TableFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
             ],
             [
                 'id' => '9f4ece41-25be-4164-9dab-01ad16fd5e73',
-                'name' => 'Scène',
+                'name' => 'Sièges public',
                 'maxNumberOfParticipants' => 280,
+                'room' => $this->getReference('room-Scène'),
+            ],
+            [
+                'id' => 'ef3b8529-29ec-41e2-8c85-a06fe4f2bd12',
+                'name' => 'Participants scène',
                 'room' => $this->getReference('room-Scène'),
             ],
         ];

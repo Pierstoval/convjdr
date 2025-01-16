@@ -1,0 +1,7 @@
+.form-fieldset-body.show > .row > [class*="col"] {
+    width: 100%;
+}
+
+.field-collection-item:has([id^="Venue"]) {
+    border: solid 1px red;
+}

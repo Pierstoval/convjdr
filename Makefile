@@ -1,4 +1,11 @@
 
+start:
+	symfony server:start --daemon
+	docker compose up -d
+
+stop:
+	symfony server:stop
+	docker compose stop
 
 install: vendor
 
@@ -13,4 +20,6 @@ db:
 	mv migrations/Version*.php migrations/Version20250113000000.php
 	sed -i migrations/Version20250113000000.php -e 's/Version[0-9]\+/Version20250113000000/g'
 	symfony console doctrine:migrations:migrate --no-interaction
+
+fixtures:
 	symfony console doctrine:fixtures:load --no-interaction

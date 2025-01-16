@@ -21,7 +21,7 @@ final class Version20250113000000 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE animation (
-          id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
           max_number_of_participants INT NOT NULL,
           name VARCHAR(255) NOT NULL,
           description LONGTEXT NOT NULL,
@@ -30,9 +30,9 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE attendee (
-          id VARCHAR(255) NOT NULL,
-          scheduled_animation_id VARCHAR(255) NOT NULL,
-          registered_by_id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
+          scheduled_animation_id VARCHAR(36) NOT NULL,
+          registered_by_id VARCHAR(36) NOT NULL,
           number_of_attendees INT NOT NULL,
           name VARCHAR(255) NOT NULL,
           INDEX IDX_1150D567EE3CE4EF (scheduled_animation_id),
@@ -42,8 +42,8 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE event (
-          id VARCHAR(255) NOT NULL,
-          venue_id VARCHAR(255) DEFAULT NULL,
+          id VARCHAR(36) NOT NULL,
+          venue_id VARCHAR(36) DEFAULT NULL,
           address LONGTEXT NOT NULL,
           is_online_event TINYINT(1) NOT NULL,
           enabled TINYINT(1) NOT NULL,
@@ -57,8 +57,8 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE event_user (
-          event_id VARCHAR(255) NOT NULL,
-          user_id VARCHAR(255) NOT NULL,
+          event_id VARCHAR(36) NOT NULL,
+          user_id VARCHAR(36) NOT NULL,
           INDEX IDX_92589AE271F7E88B (event_id),
           INDEX IDX_92589AE2A76ED395 (user_id),
           PRIMARY KEY(event_id, user_id)
@@ -66,8 +66,8 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE floor (
-          id VARCHAR(255) NOT NULL,
-          venue_id VARCHAR(255) DEFAULT NULL,
+          id VARCHAR(36) NOT NULL,
+          venue_id VARCHAR(36) DEFAULT NULL,
           name VARCHAR(255) NOT NULL,
           INDEX IDX_BE45D62E40A73EBA (venue_id),
           PRIMARY KEY(id)
@@ -75,8 +75,8 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE reset_password_request (
-          id VARCHAR(255) NOT NULL,
-          user_id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
+          user_id VARCHAR(36) NOT NULL,
           selector VARCHAR(20) NOT NULL,
           hashed_token VARCHAR(100) NOT NULL,
           requested_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
@@ -87,9 +87,8 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE room (
-          id VARCHAR(255) NOT NULL,
-          floor_id VARCHAR(255) DEFAULT NULL,
-          max_number_of_tables INT NOT NULL,
+          id VARCHAR(36) NOT NULL,
+          floor_id VARCHAR(36) DEFAULT NULL,
           name VARCHAR(255) NOT NULL,
           INDEX IDX_729F519B854679E2 (floor_id),
           PRIMARY KEY(id)
@@ -97,10 +96,10 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE scheduled_animation (
-          id VARCHAR(255) NOT NULL,
-          animation_id VARCHAR(255) NOT NULL,
-          animation_table_id VARCHAR(255) NOT NULL,
-          slot_id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
+          animation_id VARCHAR(36) NOT NULL,
+          animation_table_id VARCHAR(36) NOT NULL,
+          slot_id VARCHAR(36) NOT NULL,
           state VARCHAR(255) NOT NULL,
           INDEX IDX_9B4F9EDB3858647E (animation_id),
           INDEX IDX_9B4F9EDBF119ABA9 (animation_table_id),
@@ -110,9 +109,9 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `table` (
-          id VARCHAR(255) NOT NULL,
-          room_id VARCHAR(255) NOT NULL,
-          max_number_of_participants INT NOT NULL,
+          id VARCHAR(36) NOT NULL,
+          room_id VARCHAR(36) NOT NULL,
+          max_number_of_participants INT DEFAULT NULL,
           name VARCHAR(255) NOT NULL,
           INDEX IDX_F6298F4654177093 (room_id),
           PRIMARY KEY(id)
@@ -120,9 +119,9 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE time_slot (
-          id VARCHAR(255) NOT NULL,
-          category_id VARCHAR(255) DEFAULT NULL,
-          event_id VARCHAR(255) DEFAULT NULL,
+          id VARCHAR(36) NOT NULL,
+          category_id VARCHAR(36) DEFAULT NULL,
+          event_id VARCHAR(36) DEFAULT NULL,
           name VARCHAR(255) NOT NULL,
           starts_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
           ends_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
@@ -133,7 +132,7 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE time_slot_category (
-          id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
           name VARCHAR(255) NOT NULL,
           description LONGTEXT NOT NULL,
           PRIMARY KEY(id)
@@ -141,7 +140,7 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `user` (
-          id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
           username VARCHAR(180) NOT NULL,
           email VARCHAR(255) NOT NULL,
           roles JSON NOT NULL COMMENT \'(DC2Type:json)\',
@@ -156,7 +155,7 @@ final class Version20250113000000 extends AbstractMigration
         SET
           utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE venue (
-          id VARCHAR(255) NOT NULL,
+          id VARCHAR(36) NOT NULL,
           address LONGTEXT NOT NULL,
           name VARCHAR(255) NOT NULL,
           PRIMARY KEY(id)

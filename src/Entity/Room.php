@@ -3,28 +3,41 @@
 namespace App\Entity;
 
 use App\Repository\RoomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room
 {
-    use Field\Id;
+    use Field\Id { __construct as generateId; }
     use Field\Name;
 
-    #[ORM\ManyToOne()]
+    #[ORM\ManyToOne(inversedBy: 'rooms')]
     private Floor $floor;
 
-    #[ORM\Column]
-    private int $maxNumberOfTables = 1;
+    /**
+     * @var Collection<Table>
+     */
+    #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'room', cascade: ['persist', 'refresh'])]
+    private Collection $tables;
 
-    public function setMaxNumberOfTables(?int $maxNumberOfTables): void
+    public function __construct()
     {
-        $this->maxNumberOfTables = $maxNumberOfTables ?: 1;
+        $this->generateId();
+        $this->tables = new ArrayCollection();
     }
 
-    public function getMaxNumberOfTables(): int
+    public function __toString(): string
     {
-        return $this->maxNumberOfTables;
+        return $this->floor.' - '.$this->name;
+    }
+
+    public function refreshNestedRelations(): void
+    {
+        foreach ($this->tables as $table) {
+            $table->setRoom($this);
+        }
     }
 
     public function getFloor(): Floor
@@ -35,5 +48,36 @@ class Room
     public function setFloor(Floor $floor): void
     {
         $this->floor = $floor;
+    }
+
+    /**
+     * @return Collection<Table>
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Table $table): void
+    {
+        if ($this->tables->contains($table)) {
+            return;
+        }
+
+        $this->tables->add($table);
+    }
+
+    public function removeTable(Table $table): void
+    {
+        if (!$this->tables->contains($table)) {
+            return;
+        }
+
+        $this->tables->removeElement($table);
+    }
+
+    public function hasTable(Table $table): bool
+    {
+        return $this->tables->contains($table);
     }
 }
