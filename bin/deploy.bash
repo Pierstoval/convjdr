@@ -17,7 +17,7 @@ echo "[DEPLOY] > Update repository branch"
 git fetch --all --prune
 
 echo "[DEPLOY] > Applying these commits..."
-git reset --hard origin/main
+git merge origin/main
 
 echo "[DEPLOY] > Done!"
 
