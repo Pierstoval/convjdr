@@ -22,5 +22,3 @@ php bin/console assets:install --symlink --relative
 php bin/console asset-map:compile
 
 php bin/console doctrine:migrations:migrate --no-interaction
-
-php bin/console doctrine:schema:validate || echo 'Doctrine schema not valid, please make sure it is correct.'
