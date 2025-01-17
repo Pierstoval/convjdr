@@ -10,9 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventVenueRepository::class)]
-class Venue
+class Venue implements HasNestedRelations
 {
-    use Field\Id { __construct as generateId; }
+    use Field\Id { Field\Id::__construct as generateId; }
+    use Field\Creators { Field\Creators::__construct as generateCreators; }
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter a name')]
@@ -32,6 +33,7 @@ class Venue
     public function __construct()
     {
         $this->generateId();
+        $this->generateCreators();
         $this->floors = new ArrayCollection();
     }
 
@@ -39,6 +41,7 @@ class Venue
     {
         return $this->name ?? '-Unnamed-';
     }
+
     public function refreshNestedRelations(): void
     {
         foreach ($this->floors as $floor) {

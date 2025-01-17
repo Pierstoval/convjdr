@@ -23,11 +23,11 @@ class Table
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
     #[ORM\JoinColumn(nullable: false)]
-    private Room $room;
+    private ?Room $room = null;
 
     public function __toString(): string
     {
-        return $this->room.' - '.$this->name;
+        return $this->room?->__toString().' - '.$this->name;
     }
 
     public function getName(): string
@@ -50,7 +50,7 @@ class Table
         $this->maxNumberOfParticipants = $maxNumberOfParticipants;
     }
 
-    public function getRoom(): Room
+    public function getRoom(): ?Room
     {
         return $this->room;
     }

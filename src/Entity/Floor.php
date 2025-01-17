@@ -3,22 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\FloorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FloorRepository::class)]
-class Floor
+class Floor implements HasNestedRelations
 {
-    use Field\Id;
+    use Field\Id { __construct as generateId; }
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter a name')]
     private ?string $name = '';
 
     #[ORM\ManyToOne(inversedBy: 'floors')]
-    private Venue $venue;
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    private ?Venue $venue = null;
 
     /**
      * @var Collection<Room>
@@ -27,9 +30,15 @@ class Floor
     #[Assert\Valid]
     private Collection $rooms;
 
+    public function __construct()
+    {
+        $this->generateId();
+        $this->rooms = new ArrayCollection();
+    }
+
     public function __toString(): string
     {
-        return $this->venue.' - '.$this->name;
+        return $this->venue?->__toString().' - '.$this->name;
     }
 
     public function refreshNestedRelations(): void
@@ -50,7 +59,7 @@ class Floor
         $this->name = $name ?: '';
     }
 
-    public function getVenue(): Venue
+    public function getVenue(): ?Venue
     {
         return $this->venue;
     }

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
-class Room
+class Room implements HasNestedRelations
 {
     use Field\Id { __construct as generateId; }
 
@@ -19,7 +19,9 @@ class Room
     private ?string $name = '';
 
     #[ORM\ManyToOne(inversedBy: 'rooms')]
-    private Floor $floor;
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    private ?Floor $floor = null;
 
     /**
      * @var Collection<Table>
@@ -36,7 +38,7 @@ class Room
 
     public function __toString(): string
     {
-        return $this->floor.' - '.$this->name;
+        return $this->floor?->__toString().' - '.$this->name;
     }
 
     public function refreshNestedRelations(): void
@@ -56,7 +58,7 @@ class Room
         $this->name = $name ?: '';
     }
 
-    public function getFloor(): Floor
+    public function getFloor(): ?Floor
     {
         return $this->floor;
     }
