@@ -32,40 +32,26 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        $events = MenuItem::linkToCrud('Events', 'fas fa-list', Entity\Event::class);
-
-        $venueConfigSection = MenuItem::section('Venue configurations');
-        $venue = MenuItem::linkToCrud('Event Venues', 'fas fa-list', Entity\Venue::class);
-        $floor = MenuItem::linkToCrud('├─ Floor', 'fas fa-list', Entity\Floor::class)->setController(FloorCrudController::class);
-        $room = MenuItem::linkToCrud('├── Room', 'fas fa-list', Entity\Room::class);
-        $table = MenuItem::linkToCrud('└─── Table', 'fas fa-list', Entity\Table::class);
-
-        $activitiesSection = MenuItem::section('Activities');
-        $animation = MenuItem::linkToCrud('Animations', 'fas fa-list', Entity\Animation::class);
-        $scheduledAnimation = MenuItem::linkToCrud('└─ Scheduled Animations', 'fas fa-list', Entity\ScheduledAnimation::class);
-        $timeSlot = MenuItem::linkToCrud('Time Slots', 'fas fa-list', Entity\TimeSlot::class);
-        $timeSlotCategory = MenuItem::linkToCrud('└─ Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class);
-
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-
         if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::section('Administration');
         } else {
             yield MenuItem::section('Convention organisation');
         }
 
-        yield $events;
+        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
-        yield $venueConfigSection;
-        yield $venue;
-        yield $floor;
-        yield $room;
-        yield $table;
+        yield MenuItem::linkToCrud('Events', 'fas fa-list', Entity\Event::class);
 
-        yield $activitiesSection;
-        yield $animation;
-        yield $scheduledAnimation;
-        yield $timeSlot;
-        yield $timeSlotCategory;
+        yield MenuItem::section('Venue configurations');
+        yield MenuItem::linkToCrud('Event Venues', 'fas fa-list', Entity\Venue::class);
+        yield MenuItem::linkToCrud('├─ Floor', 'fas fa-list', Entity\Floor::class)->setController(FloorCrudController::class);
+        yield MenuItem::linkToCrud('├── Room', 'fas fa-list', Entity\Room::class);
+        yield MenuItem::linkToCrud('└─── Table', 'fas fa-list', Entity\Table::class);
+
+        yield MenuItem::section('Activities');
+        yield MenuItem::linkToCrud('Animations', 'fas fa-list', Entity\Animation::class);
+        yield MenuItem::linkToCrud('└─ Scheduled Animations', 'fas fa-list', Entity\ScheduledAnimation::class);
+        yield MenuItem::linkToCrud('Time Slots', 'fas fa-list', Entity\TimeSlot::class);
+        yield MenuItem::linkToCrud('└─ Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class)->setPermission('ROLE_ADMIN');
     }
 }

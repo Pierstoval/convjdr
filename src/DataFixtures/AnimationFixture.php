@@ -2,22 +2,22 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Event;
+use App\Entity\Animation;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Orbitale\Component\ArrayFixture\ArrayFixture;
 
-class EventFixture extends ArrayFixture implements ORMFixtureInterface, DependentFixtureInterface
+class AnimationFixture extends ArrayFixture implements ORMFixtureInterface, DependentFixtureInterface
 {
     protected function getEntityClass(): string
     {
-        return Event::class;
+        return Animation::class;
     }
 
     protected function getReferencePrefix(): ?string
     {
-        return 'event-';
+        return 'animation-';
     }
 
     protected function getMethodNameForReference(): string
@@ -29,7 +29,6 @@ class EventFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
     {
         return [
             UserFixture::class,
-            VenueFixture::class,
         ];
     }
 
@@ -37,15 +36,11 @@ class EventFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
     {
         return [
             [
-                'id' => 'b715276f-f7df-42ee-82f8-c21b05d2da2d',
-                'name' => 'TDC 2025',
-                'startsAt' => (new \DateTimeImmutable('today'))->setTime(0, 0, 0, 0),
-                'endsAt' => (new \DateTimeImmutable('tomorrow'))->setTime(0, 0, 0, 0),
-                'address' => 'CPC',
-                'description' => 'Hello world',
+                'id' => '7645788c-edde-4b51-9cb8-1c6f641ceffe',
+                'name' => 'Animation de jeu',
+                'description' => 'Lorem ipsum',
+                'maxNumberOfParticipants' => 5,
                 'creators' => new ArrayCollection([$this->getReference('user-admin')]),
-                'enabled' => true,
-                'venue' => $this->getReference('venue-CPC'),
             ],
         ];
     }

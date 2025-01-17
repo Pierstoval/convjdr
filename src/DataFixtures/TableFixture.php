@@ -14,6 +14,16 @@ class TableFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
         return Table::class;
     }
 
+    protected function getReferencePrefix(): ?string
+    {
+        return 'table-';
+    }
+
+    protected function getMethodNameForReference(): string
+    {
+        return 'getName';
+    }
+
     public function getDependencies(): array
     {
         return [

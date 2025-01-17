@@ -31,6 +31,7 @@ class EventCrudController extends AbstractCrudController
         }
 
         $qb->innerJoin('entity.creators', 'creators')
+            ->addSelect('creators')
             ->andWhere('creators IN (:creator)')
             ->setParameter('creator', $this->getUser())
         ;
@@ -50,17 +51,28 @@ class EventCrudController extends AbstractCrudController
         parent::persistEntity($entityManager, $entityInstance);
     }
 
+    /**
+     * @param Event $entityInstance
+     */
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $entityInstance->addCreator($user);
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
-            Field\IdField::new('id')->hideOnForm(),
             Field\TextField::new('name'),
             Field\DateTimeField::new('startsAt'),
             Field\DateTimeField::new('endsAt'),
             Field\TextEditorField::new('address')->setRequired(false)->hideOnIndex(),
             Field\TextEditorField::new('description')->setRequired(false)->hideOnIndex(),
             Field\AssociationField::new('venue')->setRequired(true),
-            Field\AssociationField::new('creators')->setHelp('The users that are allowed to manage this event. Note: you will always be included in this list.'),
+            Field\AssociationField::new('creators')->setHelp('The users that are allowed to manage this event. Note: you will always be included in this list, even if you remove yourself from it.'),
             Field\BooleanField::new('isOnlineEvent'),
         ];
     }

@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\EventVenueRepository;
+use App\Repository\VenueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: EventVenueRepository::class)]
+#[ORM\Entity(repositoryClass: VenueRepository::class)]
 class Venue implements HasNestedRelations
 {
     use Field\Id { Field\Id::__construct as generateId; }
@@ -23,9 +23,7 @@ class Venue implements HasNestedRelations
     #[ORM\Column(type: Types::TEXT)]
     private string $address = '';
 
-    /**
-     * @var Collection<Floor>
-     */
+    /** @var Collection<Floor> */
     #[ORM\OneToMany(targetEntity: Floor::class, mappedBy: 'venue', cascade: ['persist', 'refresh'])]
     #[Assert\Valid]
     private Collection $floors;
@@ -39,7 +37,7 @@ class Venue implements HasNestedRelations
 
     public function __toString(): string
     {
-        return $this->name ?? '-Unnamed-';
+        return $this->name ?: '';
     }
 
     public function refreshNestedRelations(): void

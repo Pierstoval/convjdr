@@ -23,9 +23,7 @@ class Floor implements HasNestedRelations
     #[Assert\NotBlank]
     private ?Venue $venue = null;
 
-    /**
-     * @var Collection<Room>
-     */
+    /** @var Collection<Room> */
     #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'floor', cascade: ['persist', 'refresh'])]
     #[Assert\Valid]
     private Collection $rooms;

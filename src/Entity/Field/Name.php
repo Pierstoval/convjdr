@@ -14,7 +14,7 @@ trait Name
 
     public function __toString(): string
     {
-        return $this->name ?? '-Unnamed-';
+        return $this->name ?: '';
     }
 
     public function getName(): string

@@ -36,6 +36,7 @@ class VenueCrudController extends AbstractCrudController
         }
 
         $qb->innerJoin('entity.creators', 'creators')
+            ->addSelect('creators')
             ->andWhere('creators IN (:creator)')
             ->setParameter('creator', $this->getUser())
         ;
