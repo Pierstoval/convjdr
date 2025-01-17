@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Floor;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field;
 
@@ -19,6 +20,7 @@ class FloorCrudController extends AbstractCrudController
     {
         return [
             Field\TextField::new('name', 'Floor name'),
+            Field\AssociationField::new('venue')->setDisabled($pageName === Crud::PAGE_EDIT),
             Field\CollectionField::new('rooms')->useEntryCrudForm(RoomCrudController::class),
         ];
     }

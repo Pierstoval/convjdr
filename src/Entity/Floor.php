@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\RoomRepository;
+use App\Repository\FloorRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: RoomRepository::class)]
+#[ORM\Entity(repositoryClass: FloorRepository::class)]
 class Floor
 {
     use Field\Id;

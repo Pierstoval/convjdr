@@ -32,23 +32,11 @@ class VenueCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if (Crud::PAGE_INDEX === $pageName) {
-            return [
-                Field\IdField::new('id'),
-                Field\TextField::new('name'),
-                Field\TextEditorField::new('address'),
-            ];
-        }
-
-        if (Crud::PAGE_NEW === $pageName || Crud::PAGE_EDIT === $pageName) {
-            return [
-                Field\TextField::new('name', 'Venue name or title'),
-                Field\TextEditorField::new('address'),
-                Field\CollectionField::new('floors')->useEntryCrudForm(FloorCrudController::class),
-            ];
-        }
-
-        return [];
+        return [
+            Field\TextField::new('name'),
+            Field\TextEditorField::new('address'),
+            Field\CollectionField::new('floors'),
+        ];
     }
 
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
