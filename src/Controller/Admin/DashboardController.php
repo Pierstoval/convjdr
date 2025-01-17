@@ -27,18 +27,38 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::section('Events');
-        yield MenuItem::linkToCrud('Event', 'fas fa-list', Entity\Event::class);
-        yield MenuItem::section('Venue configuration');
-        yield MenuItem::linkToCrud('Event Venue', 'fas fa-list', Entity\Venue::class);
-        yield MenuItem::linkToCrud('├─ Floor', 'fas fa-list', Entity\Floor::class);
-        yield MenuItem::linkToCrud('├── Room', 'fas fa-list', Entity\Room::class);
-        yield MenuItem::linkToCrud('└─── Table', 'fas fa-list', Entity\Table::class);
-        yield MenuItem::section('Activities');
-        yield MenuItem::linkToCrud('Animation', 'fas fa-list', Entity\Animation::class);
-        yield MenuItem::linkToCrud('└─ Scheduled Animation', 'fas fa-list', Entity\ScheduledAnimation::class);
-        yield MenuItem::linkToCrud('Time Slot', 'fas fa-list', Entity\TimeSlot::class);
-        yield MenuItem::linkToCrud('└─ Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class);
-        yield MenuItem::linkToCrud('Attendee', 'fas fa-list', Entity\Attendee::class);
+//        yield MenuItem::section('My data');
+//        yield MenuItem::section('My Events');
+//        yield MenuItem::linkToCrud('My Event', 'fas fa-list', Entity\Event::class);
+//
+//        yield MenuItem::section('My Venue configurations');
+//        yield MenuItem::linkToCrud('My Event Venue', 'fas fa-list', Entity\Venue::class);
+//        yield MenuItem::linkToCrud('My ├─ Floor', 'fas fa-list', Entity\Floor::class);
+//        yield MenuItem::linkToCrud('My ├── Room', 'fas fa-list', Entity\Room::class);
+//        yield MenuItem::linkToCrud('My └─── Table', 'fas fa-list', Entity\Table::class);
+//
+//        yield MenuItem::section('My Activities');
+//        yield MenuItem::linkToCrud('My Animations', 'fas fa-list', Entity\Animation::class);
+//        yield MenuItem::linkToCrud('└─ My Scheduled Animations', 'fas fa-list', Entity\ScheduledAnimation::class);
+//        yield MenuItem::linkToCrud('My Time Slot', 'fas fa-list', Entity\TimeSlot::class);
+//        yield MenuItem::linkToCrud('└─ Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class);
+
+        yield MenuItem::section('= Administration =')->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::section('Events')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Event', 'fas fa-list', Entity\Event::class)->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::section('Venue configuration')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Event Venue', 'fas fa-list', Entity\Venue::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Floor', 'fas fa-list', Entity\Floor::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Room', 'fas fa-list', Entity\Room::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Table', 'fas fa-list', Entity\Table::class)->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::section('Activities')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Animations', 'fas fa-list', Entity\Animation::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Scheduled Animations', 'fas fa-list', Entity\ScheduledAnimation::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Time Slot', 'fas fa-list', Entity\TimeSlot::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Attendee', 'fas fa-list', Entity\Attendee::class)->setPermission('ROLE_ADMIN');
     }
 }
