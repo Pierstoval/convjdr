@@ -34,7 +34,7 @@ final class Version20250113000000 extends AbstractMigration
 
         $this->addSql("CREATE TABLE event (
           id VARCHAR(36) NOT NULL,
-          venue_id VARCHAR(36) DEFAULT NULL,
+          venue_id VARCHAR(36) NOT NULL,
           address LONGTEXT NOT NULL,
           is_online_event TINYINT(1) NOT NULL,
           enabled TINYINT(1) DEFAULT 0 NOT NULL,
@@ -79,7 +79,7 @@ final class Version20250113000000 extends AbstractMigration
 
         $this->addSql('CREATE TABLE room (
           id VARCHAR(36) NOT NULL,
-          floor_id VARCHAR(36) DEFAULT NULL,
+          floor_id VARCHAR(36) NOT NULL,
           name VARCHAR(255) NOT NULL,
           INDEX IDX_729F519B854679E2 (floor_id),
           PRIMARY KEY(id)

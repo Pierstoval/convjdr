@@ -29,6 +29,7 @@ class Event
     private bool $isOnlineEvent = false;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
     private Venue $venue;
 

@@ -35,6 +35,7 @@ class EventFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
                 'description' => 'Hello world',
                 'creators' => new ArrayCollection([$this->getReference('user-admin')]),
                 'enabled' => true,
+                'venue' => $this->getReference('venue-CPC'),
             ],
         ];
     }
