@@ -31,14 +31,14 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Event', 'fas fa-list', Entity\Event::class);
         yield MenuItem::section('Venue configuration');
         yield MenuItem::linkToCrud('Event Venue', 'fas fa-list', Entity\Venue::class);
-        yield MenuItem::linkToCrud(' Floor', 'fas fa-list', Entity\Floor::class);
-        yield MenuItem::linkToCrud('  Room', 'fas fa-list', Entity\Room::class);
-        yield MenuItem::linkToCrud('   Table', 'fas fa-list', Entity\Table::class);
+        yield MenuItem::linkToCrud('├─ Floor', 'fas fa-list', Entity\Floor::class);
+        yield MenuItem::linkToCrud('├── Room', 'fas fa-list', Entity\Room::class);
+        yield MenuItem::linkToCrud('└─── Table', 'fas fa-list', Entity\Table::class);
         yield MenuItem::section('Activities');
         yield MenuItem::linkToCrud('Animation', 'fas fa-list', Entity\Animation::class);
-        yield MenuItem::linkToCrud(' Scheduled Animation', 'fas fa-list', Entity\ScheduledAnimation::class);
+        yield MenuItem::linkToCrud('└─ Scheduled Animation', 'fas fa-list', Entity\ScheduledAnimation::class);
         yield MenuItem::linkToCrud('Time Slot', 'fas fa-list', Entity\TimeSlot::class);
-        yield MenuItem::linkToCrud(' Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class);
+        yield MenuItem::linkToCrud('└─ Time Slot Category', 'fas fa-list', Entity\TimeSlotCategory::class);
         yield MenuItem::linkToCrud('Attendee', 'fas fa-list', Entity\Attendee::class);
     }
 }
