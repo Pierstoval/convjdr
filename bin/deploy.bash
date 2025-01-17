@@ -44,7 +44,7 @@ echo "[DEPLOY] > Pushing it to Git..."
 
 VERSION=$(date --rfc-3339=seconds)
 
-git tag -s -F "v${VERSION}"
+git tag -s -F "v${VERSION}" -m "v${VERSION}"
 git push origin "v${VERSION}"
 
 echo "[DEPLOY] > Done!"
