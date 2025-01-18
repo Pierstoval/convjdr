@@ -26,6 +26,11 @@ class ScheduledAnimation
     #[Assert\NotBlank]
     private ?TimeSlot $timeSlot = null;
 
+    public function __toString(): string
+    {
+        return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('H:i:s'), $this->timeSlot?->getEndsAt()->format('H:i:s'));
+    }
+
     public function getState(): ScheduleAnimationState
     {
         return $this->state;
