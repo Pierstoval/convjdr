@@ -31,14 +31,19 @@ jobs:
                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
                   restore-keys: ${{ runner.os }}-composer-
 
-            - name: '[Run] Install Symfony CLI'
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: '8.4'
+
+            - name: 'Install Symfony CLI'
               run: |
                 curl -sS https://get.symfony.com/cli/installer | bash
                 mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
 
-            - name: '[Run] Install the project'
+            - name: 'Install the project'
               run: |
                 make install
 
-            - name: '[Run] 🚀 Tests'
+            - name: '🚀 Tests'
               run: make test
