@@ -7,7 +7,7 @@ stop:
 	symfony server:stop
 	docker compose stop
 
-install: vendor
+install: vendor db fixtures test-db start
 
 vendor:
 	symfony composer install
@@ -35,3 +35,6 @@ test-db:
 
 fixtures:
 	symfony console --env=dev doctrine:fixtures:load --no-interaction
+
+test:
+	symfony php bin/phpunit
