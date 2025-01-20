@@ -7,7 +7,7 @@ stop:
 	symfony server:stop
 	docker compose stop
 
-install: vendor db fixtures test-db start
+install: start vendor db fixtures test-db
 
 vendor:
 	symfony composer install
