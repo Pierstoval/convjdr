@@ -34,6 +34,7 @@ jobs:
             - name: '[Run] Install Symfony CLI'
               run: |
                 curl -sS https://get.symfony.com/cli/installer | bash
+                mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
 
             - name: '[Run] Install the project'
               run: |
