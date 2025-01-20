@@ -27,5 +27,11 @@ db:
 	symfony console --env=dev doctrine:migrations:migrate --no-interaction
 	symfony console --env=dev doctrine:migration:diff --no-interaction --formatted || echo "  ➡ No migration needed 👌"
 
+test-db:
+	symfony console --env=test doctrine:database:drop --no-interaction --if-exists --force
+	symfony console --env=test doctrine:database:create --no-interaction --if-not-exists
+	symfony console --env=test doctrine:migrations:migrate --no-interaction
+	symfony console --env=test doctrine:fixtures:load --no-interaction
+
 fixtures:
 	symfony console --env=dev doctrine:fixtures:load --no-interaction

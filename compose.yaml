@@ -6,7 +6,8 @@ services:
     environment:
       MARIADB_DATABASE: ${MARIADB_DATABASE:-app}
       # You should definitely change the password in production
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-!ChangeMe!}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-app}
+      MARIADB_PASSWORD: ${MARIADB_ROOT_PASSWORD:-app}
       MARIADB_USER: ${MARIADB_USER:-root}
     #healthcheck:
     #  test: ["CMD", "pg_isready", "-d", "${MARIADB_DATABASE:-app}", "-U", "${MARIADB_USER:-root}"]

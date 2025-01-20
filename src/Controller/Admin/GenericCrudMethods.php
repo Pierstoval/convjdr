@@ -44,6 +44,11 @@ trait GenericCrudMethods
             $item = $context->getEntity()->getInstance();
             $this->addFlash('success', \sprintf('Successfully updated "%s"!', (string) $item));
         }
+        if (Action::NEW === $action) {
+            /** @var object $item */
+            $item = $context->getEntity()->getInstance();
+            $this->addFlash('success', \sprintf('Successfully created "%s"!', (string) $item));
+        }
 
         return parent::getRedirectResponseAfterSave($context, $action);
     }
