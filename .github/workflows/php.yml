@@ -11,25 +11,21 @@ jobs:
         steps:
             - uses: actions/checkout@v1
 
-            - name: "Set up Docker cache"
-              id: integ-tests-cache
-              uses: actions/cache@v4
-              with:
-                  path: /tmp/.cache-integ-tests
-                  key: integ-tests-${{ hashFiles('**/Dockerfile*', '**/*.lock', '**/package-lock.json', '**/requirements.txt') }}
-                  restore-keys: |
-                      integ-tests-
-
-            - name: Get Composer Cache Directory
-              id: composer-cache
-              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+#            - name: "Set up Docker cache"
+#              id: integ-tests-cache
+#              uses: actions/cache@v4
+#              with:
+#                  path: /tmp/.cache-integ-tests
+#                  key: integ-tests-${{ hashFiles('**/Dockerfile*', '**/*.lock', '**/package-lock.json', '**/requirements.txt') }}
+#                  restore-keys: |
+#                      integ-tests-
 
             - name: Cache composer dependencies
               uses: actions/cache@v4
               with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: ${{ runner.os }}-composer-
+                  path: "~/.composer/cache/files"
+                  key: "composer-${{ hashFiles('**/composer.lock') }}"
+                  restore-keys: "composer-"
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -39,7 +35,7 @@ jobs:
             - name: 'Install Symfony CLI'
               run: |
                 curl -sS https://get.symfony.com/cli/installer | bash
-                mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
+                mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 
             - name: 'Install the project'
               run: |
