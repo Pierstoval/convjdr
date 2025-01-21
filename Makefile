@@ -1,7 +1,7 @@
 
 start:
 	symfony server:start --daemon
-	docker compose up -d
+	docker compose up --detach --wait
 
 stop:
 	symfony server:stop
