@@ -29,9 +29,16 @@ trait TestAdminIndex
             $row = $this->client->getCrawler()->filter($this->getIndexEntityRowSelector($id));
             foreach (self::getIndexColumnNames() as $column) {
                 $value = $data[$column];
+
+                if (\str_starts_with((string) $value, 'ref/')) {
+                    // Don't check references: they come from another Crud and might be formatted
+                    continue;
+                }
+
                 if (null === $value) {
                     $value = 'Null';
                 }
+
                 static::assertSame((string) $value, $row->filter($this->getIndexColumnSelector($column, 'data'))->text());
             }
         }

@@ -32,9 +32,8 @@ trait GetObjectsFromData
         foreach (self::DATA as $id => $values) {
             foreach ($values as $k => $v) {
                 $values['id'] = $id;
-                if (\str_starts_with($k, 'ref/')) {
-                    unset($values[$k]);
-                    $k = \preg_replace('~^ref/~', '', $k);
+                if (\str_starts_with($v, 'ref/')) {
+                    $v = \preg_replace('~^ref/~', '', $v);
                     $values[$k] = $this->getReference($v);
                 }
             }

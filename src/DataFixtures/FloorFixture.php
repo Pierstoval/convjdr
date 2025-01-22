@@ -9,6 +9,19 @@ use Orbitale\Component\ArrayFixture\ArrayFixture;
 
 class FloorFixture extends ArrayFixture implements ORMFixtureInterface, DependentFixtureInterface
 {
+    use GetObjectsFromData;
+
+    public const array DATA = [
+        '82038d5d-165e-44b3-9938-f286b6544298' => [
+            'name' => 'RDC',
+            'venue' => 'ref/venue-CPC',
+        ],
+        'c97f718d-fd46-4d5d-80eb-7e52dee9b470' => [
+            'name' => 'Entresol',
+            'venue' => 'ref/venue-CPC',
+        ],
+    ];
+
     protected function getEntityClass(): string
     {
         return Floor::class;
@@ -28,22 +41,6 @@ class FloorFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
     {
         return [
             EventFixture::class,
-        ];
-    }
-
-    protected function getObjects(): iterable
-    {
-        return [
-            [
-                'id' => '82038d5d-165e-44b3-9938-f286b6544298',
-                'name' => 'RDC',
-                'venue' => $this->getReference('venue-CPC'),
-            ],
-            [
-                'id' => 'c97f718d-fd46-4d5d-80eb-7e52dee9b470',
-                'name' => 'Entresol',
-                'venue' => $this->getReference('venue-CPC'),
-            ],
         ];
     }
 }

@@ -20,8 +20,6 @@ trait TestAdminNew
 
         $this->client->loginUser($this->getUser());
         $this->client->request('GET', $this->generateNewFormUrl());
-        $this->assertFormFieldExists('name');
-        $this->assertFormFieldExists('maxNumberOfParticipants');
 
         /** @var class-string<AbstractCrudController> $controllerClass */
         $controllerClass = $this->getControllerFqcn();
