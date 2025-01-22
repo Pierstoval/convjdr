@@ -44,9 +44,11 @@ class EventCrudController extends AbstractCrudController
      */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $entityInstance->addCreator($user);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $entityInstance->addCreator($user);
+        }
 
         parent::persistEntity($entityManager, $entityInstance);
     }
@@ -56,9 +58,11 @@ class EventCrudController extends AbstractCrudController
      */
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $entityInstance->addCreator($user);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $entityInstance->addCreator($user);
+        }
 
         parent::updateEntity($entityManager, $entityInstance);
     }

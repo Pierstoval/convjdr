@@ -45,9 +45,11 @@ class AnimationCrudController extends AbstractCrudController
      */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $entityInstance->addCreator($user);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $entityInstance->addCreator($user);
+        }
 
         parent::persistEntity($entityManager, $entityInstance);
     }
@@ -57,23 +59,13 @@ class AnimationCrudController extends AbstractCrudController
      */
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $entityInstance->addCreator($user);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $entityInstance->addCreator($user);
+        }
 
         parent::updateEntity($entityManager, $entityInstance);
-    }
-
-    public function createEntity(string $entityFqcn): Animation
-    {
-        /** @var Animation $entityInstance */
-        $entityInstance = parent::createEntity($entityFqcn);
-
-        /** @var User $user */
-        $user = $this->getUser();
-        $entityInstance->addCreator($user);
-
-        return $entityInstance;
     }
 
     public function configureFields(string $pageName): iterable
