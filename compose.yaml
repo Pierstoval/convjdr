@@ -7,7 +7,6 @@ services:
       MARIADB_DATABASE: ${MARIADB_DATABASE:-app}
       # You should definitely change the password in production
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-app}
-      MARIADB_PASSWORD: ${MARIADB_ROOT_PASSWORD:-app}
       MARIADB_USER: ${MARIADB_USER:-root}
     healthcheck:
       test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-p${MARIADB_ROOT_PASSWORD:-app}"]
