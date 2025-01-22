@@ -39,13 +39,13 @@ then
     bash ../post_deploy.bash
 fi
 
-echo "[DEPLOY] > Tagging release..."
+VERSION=$(date --rfc-3339=seconds | sed -e 's/ /T/' -e 's/:/-/g' -e 's/\+.*//g')
+
+echo "[DEPLOY] > Tagging new release \"${VERSION}\"..."
 echo "[DEPLOY] > Pushing it to Git..."
 
-VERSION=$(date --rfc-3339=seconds)
-
 git tag -s -F "v${VERSION}" -m "v${VERSION}"
-git push origin "v${VERSION}"
+git push origin --tags "v${VERSION}"
 
 echo "[DEPLOY] > Done!"
 echo "[DEPLOY] > Deploy finished!"
