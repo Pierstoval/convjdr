@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 trait GetObjectsFromData
 {
     public static function getIdFromName(string $name): string
@@ -32,9 +34,19 @@ trait GetObjectsFromData
         foreach (self::DATA as $id => $values) {
             foreach ($values as $k => $v) {
                 $values['id'] = $id;
-                if (\str_starts_with($v, 'ref/')) {
+                if (\is_string($v) && \str_starts_with($v, 'ref/')) {
                     $v = \preg_replace('~^ref/~', '', $v);
                     $values[$k] = $this->getReference($v);
+                } elseif (\is_array($v)) {
+                    $hasRef = false;
+                    foreach ($v as $w => $x) {
+                        if (\str_starts_with($x, 'ref/')) {
+                            $x = \preg_replace('~^ref/~', '', $x);
+                            $v[$w] = $this->getReference($x);
+                            $hasRef = true;
+                        }
+                    }
+                    $values[$k] = $hasRef ? new ArrayCollection($v) : $v;
                 }
             }
             yield $id => $values;

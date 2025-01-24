@@ -30,7 +30,7 @@ class TimeSlot
 
     public function __toString(): string
     {
-        return sprintf("%s (⏲ %s ➡ %s)", $this->table, $this->startsAt?->format('H:i:s'), $this->endsAt?->format('H:i:s'));
+        return sprintf("%s (⏲ %s ➡ %s)", $this->table, $this->startsAt?->format('Y-m-d H:i:s'), $this->endsAt?->format('Y-m-d H:i:s'));
     }
 
     #[Assert\IsTrue(message: 'Time slot start and end date must be included in start and end date from the associated Event.')]

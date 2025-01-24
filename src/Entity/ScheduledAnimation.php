@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Enum\ScheduleAnimationState;
 use App\Repository\ScheduledAnimationRepository;
+use App\Validator\NoOverlappingSchedules;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ScheduledAnimationRepository::class)]
+#[NoOverlappingSchedules]
 class ScheduledAnimation
 {
     use Field\Id;
@@ -28,7 +30,7 @@ class ScheduledAnimation
 
     public function __toString(): string
     {
-        return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('H:i:s'), $this->timeSlot?->getEndsAt()->format('H:i:s'));
+        return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('Y-m-d H:i:s'), $this->timeSlot?->getEndsAt()->format('Y-m-d H:i:s'));
     }
 
     public function getState(): ScheduleAnimationState

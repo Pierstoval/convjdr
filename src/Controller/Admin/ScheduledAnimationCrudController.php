@@ -28,9 +28,8 @@ class ScheduledAnimationCrudController extends AbstractCrudController
             return $qb;
         }
 
-        $qb->innerJoin('entity.floor', 'floor')
-            ->innerJoin('floor.venue', 'venue')
-            ->innerJoin('venue.creators', 'creators')
+        $qb->innerJoin('entity.animation', 'animation')
+            ->innerJoin('animation.creators', 'creators')
             ->andWhere('creators IN (:creator)')
             ->setParameter('creator', $this->getUser())
         ;
