@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\TimeSlotRepository;
+use App\Validator\NoOverlappingTimeSlot;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TimeSlotRepository::class)]
+#[NoOverlappingTimeSlot]
 class TimeSlot
 {
     use Field\Id;
@@ -26,7 +28,7 @@ class TimeSlot
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
-    private ?Table $table = null;
+    private Table $table;
 
     public function __toString(): string
     {
@@ -36,10 +38,10 @@ class TimeSlot
     #[Assert\IsTrue(message: 'Time slot start and end date must be included in start and end date from the associated Event.')]
     public function isEventDateValid(): bool
     {
-        return $this->startsAt >= $this->event->startsAt
-            && $this->startsAt <= $this->event->endsAt
-            && $this->endsAt >= $this->event->startsAt
-            && $this->endsAt <= $this->event->endsAt
+        return $this->startsAt >= $this->event->getStartsAt()
+            && $this->startsAt <= $this->event->getEndsAt()
+            && $this->endsAt >= $this->event->getStartsAt()
+            && $this->endsAt <= $this->event->getEndsAt()
         ;
     }
 
@@ -73,12 +75,12 @@ class TimeSlot
         $this->event = $event;
     }
 
-    public function getTable(): ?Table
+    public function getTable(): Table
     {
         return $this->table;
     }
 
-    public function setTable(?Table $table): void
+    public function setTable(Table $table): void
     {
         $this->table = $table;
     }

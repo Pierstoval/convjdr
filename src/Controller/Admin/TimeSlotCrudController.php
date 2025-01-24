@@ -18,8 +18,9 @@ class TimeSlotCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield Field\FormField::addColumn(12);
+        yield Field\TextField::new('name')->setRequired(true);
         yield Field\AssociationField::new('event')->setRequired(true);
-        yield Field\AssociationField::new('category')->setRequired(true);
+        yield Field\AssociationField::new('category')->setRequired(true)->setHelp('Mostly informational');
         yield Field\AssociationField::new('table')->setRequired(true);
         yield Field\FormField::addColumn(6);
         yield Field\DateTimeField::new('startsAt');

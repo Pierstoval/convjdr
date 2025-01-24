@@ -40,4 +40,19 @@ class TimeSlotRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function hasOverlap(TimeSlot $value): bool
+    {
+        $result = $this->createQueryBuilder('time_slot')
+            ->select('count(time_slot) as has_overlaps')
+            ->where('time_slot.event = :event')
+            ->andWhere('time_slot.startsAt < :end')
+            ->andWhere('time_slot.endsAt > :start')
+            ->setParameter('start', $value->getStartsAt())
+            ->setParameter('end', $value->getEndsAt())
+            ->setParameter('event', $value->getEvent())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result > 0;
+    }
 }

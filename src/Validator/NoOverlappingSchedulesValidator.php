@@ -3,6 +3,7 @@
 namespace App\Validator;
 
 use App\Entity\ScheduledAnimation;
+use App\Entity\TimeSlot;
 use App\Enum\ScheduleAnimationState;
 use App\Repository\ScheduledAnimationRepository;
 use Symfony\Component\Validator\Constraint;
@@ -40,20 +41,7 @@ final class NoOverlappingSchedulesValidator extends ConstraintValidator
                 ->atPath('animation')
                 ->addViolation()
             ;
-        }
-
-        $schedulesFromTime = $this->scheduledAnimationRepository->findBy([
-            'timeSlot' => $value->getTimeSlot(),
-            'state' => ScheduleAnimationState::ACCEPTED,
-        ]);
-
-        if (\count($schedulesFromTime)) {
-            $this->context->buildViolation($constraint->timeSlotAlreadyTaken)
-                ->atPath('timeSlot')
-                ->addViolation()
-            ;
-
-            return;
+            $this->context->buildViolation('')->atPath('timeSlot')->addViolation();
         }
     }
 }
