@@ -26,11 +26,17 @@ class ScheduledAnimation
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
-    private ?TimeSlot $timeSlot = null;
+    private TimeSlot $timeSlot;
 
     public function __toString(): string
     {
         return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('Y-m-d H:i:s'), $this->timeSlot?->getEndsAt()->format('Y-m-d H:i:s'));
+    }
+
+    public function isInHour(int $hour): bool
+    {
+        return $this->timeSlot->getStartsAt()->format('H') <= $hour
+            && $this->timeSlot->getEndsAt()->format('H') > $hour;
     }
 
     public function getState(): ScheduleAnimationState
@@ -53,12 +59,12 @@ class ScheduledAnimation
         $this->animation = $animation;
     }
 
-    public function getTimeSlot(): ?TimeSlot
+    public function getTimeSlot(): TimeSlot
     {
         return $this->timeSlot;
     }
 
-    public function setTimeSlot(?TimeSlot $timeSlot): void
+    public function setTimeSlot(TimeSlot $timeSlot): void
     {
         $this->timeSlot = $timeSlot;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\TimeSlot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,30 +17,6 @@ class TimeSlotRepository extends ServiceEntityRepository
         parent::__construct($registry, TimeSlot::class);
     }
 
-//    /**
-//     * @return TimeSlot[] Returns an array of TimeSlot objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?TimeSlot
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
     public function hasOverlap(TimeSlot $value): bool
     {
         $result = $this->createQueryBuilder('time_slot')
@@ -54,5 +31,18 @@ class TimeSlotRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return $result > 0;
+    }
+
+    /**
+     * @return array<TimeSlot>
+     */
+    public function findForEvent(Event $event): array
+    {
+        return $this->createQueryBuilder('time_slot')
+            ->where('time_slot.event = :event')
+            ->setParameter('event', $event)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

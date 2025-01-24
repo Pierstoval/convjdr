@@ -27,20 +27,20 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        return parent::configureAssets()->addCssFile('styles/admin-nested-forms.css');
+        return parent::configureAssets()
+            ->addCssFile('styles/admin.css')
+            ->addAssetMapperEntry('admin')
+        ;
     }
 
     public function configureMenuItems(): iterable
     {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            yield MenuItem::section('Administration');
-        } else {
-            yield MenuItem::section('Convention organisation');
-        }
-
+        yield MenuItem::section('Administration');
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
+        yield MenuItem::section('Convention organisation');
         yield MenuItem::linkToCrud('Events', 'fas fa-list', Entity\Event::class);
+        yield MenuItem::linkToRoute('Calendar', 'fas fa-calendar', 'admin_calendar');
 
         yield MenuItem::section('Venue configurations');
         yield MenuItem::linkToCrud('Event Venues', 'fas fa-list', Entity\Venue::class);

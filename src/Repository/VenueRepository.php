@@ -16,28 +16,19 @@ class VenueRepository extends ServiceEntityRepository
         parent::__construct($registry, Venue::class);
     }
 
-//    /**
-//     * @return EventVenue[] Returns an array of EventVenue objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?EventVenue
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findWithRelations(string $id): Venue
+    {
+        return $this->createQueryBuilder('venue')
+            ->where('venue.id = :id')
+                ->setParameter('id', $id)
+            ->innerJoin('venue.floors', 'floor')
+                ->addSelect('floor')
+            ->innerJoin('floor.rooms', 'room')
+                ->addSelect('room')
+            ->innerJoin('room.tables', 'table')
+                ->addSelect('table')
+            ->getQuery()
+            ->getSingleResult()
+        ;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\ScheduledAnimation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,28 +17,17 @@ class ScheduledAnimationRepository extends ServiceEntityRepository
         parent::__construct($registry, ScheduledAnimation::class);
     }
 
-//    /**
-//     * @return ScheduledAnimation[] Returns an array of ScheduledAnimation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?ScheduledAnimation
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return array<ScheduledAnimation>
+     */
+    public function findForEvent(Event $event): array
+    {
+        return $this->createQueryBuilder('scheduled_animation')
+            ->innerJoin('scheduled_animation.timeSlot', 'time_slot')
+            ->innerJoin('time_slot.event', 'event')
+            ->where('time_slot.event = :event')
+            ->setParameter('event', $event)
+            ->getQuery()
+            ->getResult();
+    }
 }

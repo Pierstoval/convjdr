@@ -1,0 +1,73 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    {{ 'Calendar'|trans }}
+{% endblock %}
+
+{% block main %}
+    <h4>Event:</h4>
+
+    {% set cols_sizes = 10 / (event.venue.floors|length) %}
+
+    <div>
+        <div class="row text-center">
+            <div class="col-2 card">
+                <div class="card-body">
+                    {{ 'Hours'|trans }}
+                </div>
+            </div>
+            {% for floor in event.venue.floors %}
+                <div class="col-{{ cols_sizes }} card">
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">{{ floor.name }}</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
+                                    {% for room in floor.rooms %}
+                                        <div class="col-{{ floor_cols_sizes }}">
+                                            {{ room.name }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% for hour in hours %}
+            <div class="row">
+                <div class="col-2 card text-center">
+                    <div class="card-body">
+                        {{ hour }}:00
+                    </div>
+                </div>
+                {% for floor in event.venue.floors %}
+                    <div class="col-{{ cols_sizes }} card">
+                        <div class="card-body">
+                            <div class="row">
+                                {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
+                                {% for room in floor.rooms %}
+                                    <div class="col-{{ floor_cols_sizes }}">
+                                        {% for scheduled_animation in scheduled_animations %}
+                                            {% if scheduled_animation.isInHour(hour) %}
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        {{ scheduled_animation.animation.name }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

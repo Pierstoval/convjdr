@@ -44,6 +44,11 @@ class Event
         return $this->name ?: '';
     }
 
+    public function getDays(): int
+    {
+        return $this->endsAt->diff($this->startsAt)->days;
+    }
+
     public function getName(): string
     {
         return $this->name;
