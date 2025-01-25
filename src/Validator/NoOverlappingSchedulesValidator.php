@@ -3,8 +3,6 @@
 namespace App\Validator;
 
 use App\Entity\ScheduledAnimation;
-use App\Entity\TimeSlot;
-use App\Enum\ScheduleAnimationState;
 use App\Repository\ScheduledAnimationRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
