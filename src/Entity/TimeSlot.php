@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\TimeSlotRepository;
 use App\Validator\NoOverlappingTimeSlot;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[NoOverlappingTimeSlot]
 class TimeSlot
 {
-    use Field\Id;
+    use Field\Id { __construct as generateId; }
     use Field\StartEndDates;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
@@ -29,6 +31,15 @@ class TimeSlot
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     private Table $table;
+
+    #[ORM\OneToMany(targetEntity: ScheduledAnimation::class, mappedBy: 'timeSlot')]
+    private Collection $scheduledAnimations;
+
+    public function __construct()
+    {
+        $this->generateId();
+        $this->scheduledAnimations = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -91,5 +102,13 @@ class TimeSlot
     public function setTable(Table $table): void
     {
         $this->table = $table;
+    }
+
+    /**
+     * @return Collection<ScheduledAnimation>
+     */
+    public function getScheduledAnimations(): Collection
+    {
+        return $this->scheduledAnimations;
     }
 }

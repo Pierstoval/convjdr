@@ -23,7 +23,7 @@ class ScheduledAnimation
     #[Assert\NotBlank]
     private ?Animation $animation = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'scheduledAnimations')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     private TimeSlot $timeSlot;
@@ -37,6 +37,16 @@ class ScheduledAnimation
     {
         return $this->timeSlot->getStartsAt()->format('H') <= $hour
             && $this->timeSlot->getEndsAt()->format('H') > $hour;
+    }
+
+    public function stateCssClass(): string
+    {
+        return match ($this->state) {
+            ScheduleAnimationState::CREATED => 'primary',
+            ScheduleAnimationState::PENDING_REVIEW => 'warning text-white',
+            ScheduleAnimationState::REFUSED => 'error',
+            ScheduleAnimationState::ACCEPTED => 'success',
+        };
     }
 
     public function getState(): ScheduleAnimationState

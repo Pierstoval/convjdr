@@ -1,0 +1,10 @@
+
+<p>{{ 'Choose an event:'|trans }}</p>
+
+<div class="list-group">
+    {% for event in events %}
+        <a class="list-group-item list-group-item-action" href="{{ path('admin_calendar', {event: event.id}) }}">
+            {{ event.name }}
+        </a>
+    {% endfor %}
+</div>

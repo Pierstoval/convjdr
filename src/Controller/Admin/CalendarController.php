@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Event;
 use App\Entity\ScheduledAnimation;
 use App\Entity\TimeSlot;
+use App\Enum\ScheduleAnimationState;
 use App\Repository\EventRepository;
 use App\Repository\ScheduledAnimationRepository;
 use App\Repository\TimeSlotRepository;
@@ -34,18 +36,23 @@ class CalendarController extends AbstractController
     {
         $this->adminContextProvider->getContext();
 
+        $events = $this->eventRepository->findAll();
+
         if ($request->query->has('event')) {
-            return $this->viewCalendar($request);
+            return $this->viewCalendar($request, $events);
         }
 
         $events = $this->eventRepository->findAll();
 
-        return $this->render('admin/calendar/choose_event.html.twig', [
+        return $this->render('admin/calendar/calendar.html.twig', [
             'events' => $events,
         ]);
     }
 
-    private function viewCalendar(Request $request): Response
+    /**
+     * @param array<Event> $events
+     */
+    private function viewCalendar(Request $request, array $events): Response
     {
         $eventId = $request->query->get('event');
 
@@ -58,14 +65,18 @@ class CalendarController extends AbstractController
         }
 
         $venue = $this->venueRepository->findWithRelations($event->getVenue()->getId());
-        $timeSlots = $this->timeSlotRepository->findForEvent($event);
-        $scheduledAnimations = $this->scheduledAnimationRepository->findForEvent($event);
+
+        $states = [
+            ScheduleAnimationState::ACCEPTED,
+        ];
+        $timeSlots = $this->timeSlotRepository->findForEvent($event, $states);
         $hours = $this->getHours($timeSlots);
 
-        return $this->render('admin/calendar/view_event.html.twig', [
+        return $this->render('admin/calendar/calendar.html.twig', [
+            'events' => $events,
+            'venue' => $venue,
             'hours' => $hours,
             'time_slots' => $timeSlots,
-            'scheduled_animations' => $scheduledAnimations,
             'event' => $event,
         ]);
     }
