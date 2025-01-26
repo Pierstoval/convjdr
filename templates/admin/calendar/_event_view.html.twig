@@ -1,8 +1,10 @@
-<h4>Event:</h4>
+<h4>Event: {{ event }}</h4>
 
 {% set cols_sizes = 10 / (event.venue.floors|length) %}
 
 <div>
+
+
     <div class="row text-center">
         <div class="col-2 card">
             <div class="card-body">
@@ -53,12 +55,22 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <p>{{ scheduled_animation.timeSlot }}</p>
-                                                    <a href="{{ path('admin_scheduled_animation_edit', {entityId: scheduled_animation.id}) }}" class="card-link">
-                                                        <i class="fas fa-pencil"></i> {{ 'Edit'|trans }}
-                                                    </a>
                                                 </div>
                                                 <div class="card-footer bg-transparent border-success">
-                                                    <a href="#" class="card-link">Another link</a>
+                                                    <form method="post">
+                                                        {% if is_granted('CAN_ACCEPT_SCHEDULE', scheduled_animation) %}
+                                                            {# TODO: add CSRF token #}
+                                                            <button type="submit" class="btn btn-small btn-success card-link" formaction="{{ path('admin_scheduled_animation_accept', {entityId: scheduled_animation.id}) }}">
+                                                                 {{ '✅ Accept'|trans }}
+                                                            </button>
+                                                        {% endif %}
+                                                        {% if is_granted('CAN_REJECT_SCHEDULE', scheduled_animation) %}
+                                                            {# TODO: add CSRF token #}
+                                                            <button type="submit" class="btn btn-small btn-danger card-link" formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}">
+                                                                 {{ '❌ Reject'|trans }}
+                                                            </button>
+                                                        {% endif %}
+                                                    </form>
                                                 </div>
                                             </div>
                                         {% endfor %}

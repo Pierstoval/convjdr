@@ -51,7 +51,7 @@ class TimeSlotRepository extends ServiceEntityRepository
                 scheduled_animations
             FROM {$this->getEntityName()} time_slot
             INNER JOIN time_slot.event event
-            INNER JOIN time_slot.table table
+            LEFT JOIN time_slot.table table
             LEFT JOIN time_slot.scheduledAnimations scheduled_animations
             WHERE time_slot.event = :event
             AND scheduled_animations.state IN (:states)

@@ -1,0 +1,27 @@
+'Choose an event:': 'Choose an event:'
+Calendar: Calendar
+Hours: Hours
+Edit: Edit
+Creators: Creators
+Name: Name
+'ScheduledAnimation': 'ScheduledAnimation'
+'Administration': 'Administration'
+'Dashboard': 'Dashboard'
+'Convention organisation': 'Convention organisation'
+'Events': 'Events'
+'Venue configurations': 'Venue configurations'
+'Event Venues': 'Event Venues'
+'├─ Floor': '├─ Floor'
+'├── Room': '├── Room'
+'└─── Table': '└─── Table'
+'Activities': 'Activities'
+'Animations': 'Animations'
+'└─ Scheduled Animations': '└─ Scheduled Animations'
+'Time Slots': 'Time Slots'
+'└─ Time Slot Category': '└─ Time Slot Category'
+
+'State String': 'State'
+'Animation': 'Animation'
+'Time Slot': 'Time Slot'
+schedule.list.confirm_accept: 'Accept this schedule?'
+schedule.list.confirm_refuse: 'Refuse this schedule?'

@@ -18,36 +18,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Field\Id;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(name: 'username', type: 'string', length: 180, unique: true, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter a username')]
     private string $username;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(name: 'email', type: 'string', length: 255, unique: true, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter an email')]
     #[Assert\Email()]
     private string $email;
 
-    /**
-     * @var array<string> The user roles
-     */
-    #[ORM\Column]
+    /** @var array<string> */
+    #[ORM\Column(name: 'roles', type: 'json', nullable: false)]
     private array $roles = [];
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'password', type: 'string', nullable: false)]
     private string $password;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: 'password_confirmation_token', type: 'string', nullable: true)]
     private ?string $passwordConfirmationToken = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'is_email_confirmed', type: 'boolean', nullable: false, options: ['default' => 0])]
     private bool $isEmailConfirmed = false;
 
-    /** Used in forms, mostly */
+    #[ORM\Column(name: 'is_verified', type: 'boolean', nullable: false, options: ['default' => 0])]
+    private bool $isVerified = false;
+
+    #[ORM\Column(name: 'timezone', type: 'string', nullable: false, options: ['default' => 'Europe/Paris'])]
+    private string $timezone = 'Europe/Paris';
+
+    /** Used in forms, mostly, because, you know, DTOs in EasyAdmin are super annoying to do. */
     public array $formNewRoles = [];
     public ?string $formNewPassword = '';
-
-    #[ORM\Column]
-    private bool $isVerified = false;
 
     public function __toString(): string
     {

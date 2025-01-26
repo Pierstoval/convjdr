@@ -33,12 +33,6 @@ class ScheduledAnimation
         return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('Y-m-d H:i:s'), $this->timeSlot?->getEndsAt()->format('Y-m-d H:i:s'));
     }
 
-    public function isInHour(int $hour): bool
-    {
-        return $this->timeSlot->getStartsAt()->format('H') <= $hour
-            && $this->timeSlot->getEndsAt()->format('H') > $hour;
-    }
-
     public function stateCssClass(): string
     {
         return match ($this->state) {
@@ -48,6 +42,13 @@ class ScheduledAnimation
             ScheduleAnimationState::ACCEPTED => 'success',
         };
     }
+
+    public function getStateString(): string
+    {
+        return $this->state->value;
+    }
+
+    //
 
     public function getState(): ScheduleAnimationState
     {

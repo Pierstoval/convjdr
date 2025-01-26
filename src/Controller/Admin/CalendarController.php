@@ -7,7 +7,6 @@ use App\Entity\ScheduledAnimation;
 use App\Entity\TimeSlot;
 use App\Enum\ScheduleAnimationState;
 use App\Repository\EventRepository;
-use App\Repository\ScheduledAnimationRepository;
 use App\Repository\TimeSlotRepository;
 use App\Repository\VenueRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
@@ -25,7 +24,6 @@ class CalendarController extends AbstractController
     public function __construct(
         private readonly EventRepository $eventRepository,
         private readonly TimeSlotRepository $timeSlotRepository,
-        private readonly ScheduledAnimationRepository $scheduledAnimationRepository,
         private readonly VenueRepository $venueRepository,
         private readonly AdminContextProvider $adminContextProvider,
     ) {
@@ -67,6 +65,9 @@ class CalendarController extends AbstractController
         $venue = $this->venueRepository->findWithRelations($event->getVenue()->getId());
 
         $states = [
+            ScheduleAnimationState::CREATED,
+            ScheduleAnimationState::PENDING_REVIEW,
+            ScheduleAnimationState::REFUSED,
             ScheduleAnimationState::ACCEPTED,
         ];
         $timeSlots = $this->timeSlotRepository->findForEvent($event, $states);

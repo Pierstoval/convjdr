@@ -18,6 +18,9 @@ trait Creators
         $this->creators = new ArrayCollection();
     }
 
+    /**
+     * @return Collection<User>
+     */
     public function getCreators(): Collection
     {
         return $this->creators;

@@ -77,6 +77,10 @@ assets: ## Compile asset-map files
 	@symfony console asset-map:compile
 .PHONY: assets
 
+cc: ## Clear the cache (without warming it up)
+	@symfony console cache:clear --no-warmup
+.PHONY: cc
+
 ##
 ## Testing
 ## -------

@@ -30,11 +30,8 @@ final class NoOverlappingSchedulesValidator extends ConstraintValidator
             ));
         }
 
-        $sameAnimationAndTime = $this->scheduledAnimationRepository->findBy([
-            'animation' => $value->getAnimation(),
-            'timeSlot' => $value->getTimeSlot(),
-        ]);
-        if (\count($sameAnimationAndTime)) {
+        $hasSimilarSchedules = $this->scheduledAnimationRepository->hasSimilar($value);
+        if ($hasSimilarSchedules) {
             $this->context->buildViolation($constraint->sameAnimationAlreadyProposed)
                 ->atPath('animation')
                 ->addViolation()
