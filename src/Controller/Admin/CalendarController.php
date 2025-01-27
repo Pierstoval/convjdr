@@ -65,7 +65,7 @@ class CalendarController extends AbstractController
         $venue = $this->venueRepository->findWithRelations($event->getVenue()->getId());
 
         $states = [
-            ScheduleAnimationState::CREATED,
+            //ScheduleAnimationState::CREATED,
             ScheduleAnimationState::PENDING_REVIEW,
             ScheduleAnimationState::REFUSED,
             ScheduleAnimationState::ACCEPTED,

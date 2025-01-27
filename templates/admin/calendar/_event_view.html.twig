@@ -1,86 +1,104 @@
-<h4>Event: {{ event }}</h4>
+<h4>{{ 'Event:'|trans }} {{ event }}</h4>
+
+<div class="card m-4">
+    <div class="card-header">
+        <h5>{{ 'Filters:'|trans }}</h5>
+    </div>
+    <div class="card-body">
+        todo
+    </div>
+</div>
 
 {% set cols_sizes = 10 / (event.venue.floors|length) %}
 
-<div>
-
-
-    <div class="row text-center">
-        <div class="col-2 card">
-            <div class="card-body">
-                {{ 'Hours'|trans }}
-            </div>
+<div class="row text-center">
+    <div class="col-2 card">
+        <div class="card-body">
+            {{ 'Hours'|trans }}
         </div>
-        {% for floor in event.venue.floors %}
-            <div class="col-{{ cols_sizes }} card">
-                <div class="card-body">
-                    <div class="card">
-                        <div class="card-header">{{ floor.name }}</div>
-                        <div class="card-body">
-                            <div class="row">
-                                {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
-                                {% for room in floor.rooms %}
-                                    <div class="col-{{ floor_cols_sizes }}">
-                                        {{ room.name }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
     </div>
-
-    {% for hour in hours %}
-        <div class="row">
-            <div class="col-2 card text-center">
-                <div class="card-body">
-                    {{ hour }}:00
-                </div>
-            </div>
-            {% for floor in event.venue.floors %}
-                <div class="col-{{ cols_sizes }} card">
+    {% for floor in event.venue.floors %}
+        <div class="col-{{ cols_sizes }} card">
+            <div class="card-body">
+                <div class="card">
+                    <div class="card-header">{{ floor.name }}</div>
                     <div class="card-body">
                         <div class="row">
                             {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
                             {% for room in floor.rooms %}
                                 <div class="col-{{ floor_cols_sizes }}">
-                                    {% for time_slot in time_slots %}
-                                        {% for scheduled_animation in time_slot.scheduledAnimations %}
-                                            {% set state_class = scheduled_animation.stateCssClass %}
-                                            <div class="card border-{{ state_class }}">
-                                                <div class="card-header bg-{{ state_class }}">
-                                                    {{ scheduled_animation.animation.name }}
-                                                </div>
-                                                <div class="card-body">
-                                                    <p>{{ scheduled_animation.timeSlot }}</p>
-                                                </div>
-                                                <div class="card-footer bg-transparent border-success">
-                                                    <form method="post">
-                                                        {% if is_granted('CAN_ACCEPT_SCHEDULE', scheduled_animation) %}
-                                                            {# TODO: add CSRF token #}
-                                                            <button type="submit" class="btn btn-small btn-success card-link" formaction="{{ path('admin_scheduled_animation_accept', {entityId: scheduled_animation.id}) }}">
-                                                                 {{ '✅ Accept'|trans }}
-                                                            </button>
-                                                        {% endif %}
-                                                        {% if is_granted('CAN_REJECT_SCHEDULE', scheduled_animation) %}
-                                                            {# TODO: add CSRF token #}
-                                                            <button type="submit" class="btn btn-small btn-danger card-link" formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}">
-                                                                 {{ '❌ Reject'|trans }}
-                                                            </button>
-                                                        {% endif %}
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% endfor %}
+                                    {{ room.name }}
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
     {% endfor %}
 </div>
+
+{% for hour in hours %}
+    <div class="row">
+        <div class="col-2 card text-center">
+            <div class="card-body">
+                {{ hour }}:00
+            </div>
+        </div>
+        {% for floor in event.venue.floors %}
+            <div class="col-{{ cols_sizes }} card">
+                <div class="card-body">
+                    <div class="row">
+                        {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
+                        {% for room in floor.rooms %}
+                            <div class="col-{{ floor_cols_sizes }}">
+                                {% for time_slot in time_slots %}
+                                    {% for scheduled_animation in time_slot.scheduledAnimations %}
+                                        {% set state_class = scheduled_animation.stateCssClass %}
+                                        <div class="card border-{{ state_class }} mb-2">
+                                            <div class="card-header bg-{{ state_class }}">
+                                                {{ scheduled_animation.animation.name }}
+                                                <small>({{ ('scheduled_animation.state.' ~ scheduled_animation.stateString) | trans }})</small>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>
+                                                    {{ scheduled_animation.timeSlot }}
+                                                </p>
+                                            </div>
+                                            {% if scheduled_animation.isPendingReview %}
+                                                <div class="card-footer bg-transparent border-success">
+                                                    <form method="post">
+                                                        <input type="hidden" name="_csrf" value="{{ csrf_token('accept_or_reject_schedule') }}">
+                                                        {% if is_granted('CAN_ACCEPT_SCHEDULE', scheduled_animation) %}
+                                                            <button
+                                                                data-confirm="{{ 'schedule.list.confirm_accept'|trans }}"
+                                                                type="submit" class="btn btn-small btn-success card-link"
+                                                                formaction="{{ path('admin_scheduled_animation_accept', {entityId: scheduled_animation.id}) }}"
+                                                            >
+                                                                 {{ '✅ Accept'|trans }}
+                                                            </button>
+                                                        {% endif %}
+                                                        {% if is_granted('CAN_REJECT_SCHEDULE', scheduled_animation) %}
+                                                            <button
+                                                                data-confirm="{{ 'schedule.list.confirm_refuse'|trans }}"
+                                                                type="submit"
+                                                                class="btn btn-small btn-danger card-link"
+                                                                formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}"
+                                                            >
+                                                                 {{ '❌ Reject'|trans }}
+                                                            </button>
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}

@@ -38,7 +38,7 @@ class ScheduledAnimation
         return match ($this->state) {
             ScheduleAnimationState::CREATED => 'primary',
             ScheduleAnimationState::PENDING_REVIEW => 'warning text-white',
-            ScheduleAnimationState::REFUSED => 'error',
+            ScheduleAnimationState::REFUSED => 'danger',
             ScheduleAnimationState::ACCEPTED => 'success',
         };
     }
@@ -46,6 +46,11 @@ class ScheduledAnimation
     public function getStateString(): string
     {
         return $this->state->value;
+    }
+
+    public function isPendingReview(): bool
+    {
+        return $this->state === ScheduleAnimationState::PENDING_REVIEW;
     }
 
     //

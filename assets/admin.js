@@ -10,9 +10,6 @@
             link.addEventListener('click', function (event) {
                 const message = link.getAttribute('data-confirm');
                 if (confirm(message)) {
-                    if (link.tagName.toLowerCase() === 'button') {
-                        // TODO: submit as a POST form.
-                    }
                     return;
                 }
 

@@ -25,3 +25,8 @@ Name: Name
 'Time Slot': 'Time Slot'
 schedule.list.confirm_accept: 'Accept this schedule?'
 schedule.list.confirm_refuse: 'Refuse this schedule?'
+scheduled_animation.state.pending_review: 'Pending review'
+scheduled_animation.state.accepted: 'Accepted and scheduled ✅'
+scheduled_animation.state.refused: 'Refused ❌'
+'Event:': 'Event:'
+'Filters:': 'Filters:'
