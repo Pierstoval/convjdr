@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: VenueRepository::class)]
 class Venue implements HasNestedRelations
 {
-    use Field\Id { Field\Id::__construct as generateId; }
+    use Field\Id { Field\Id::__construct as private generateId; }
     use Field\Creators { Field\Creators::__construct as generateCreators; }
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]

@@ -39,7 +39,7 @@ final class ScheduledAnimationVoter extends Voter
             return true;
         }
 
-        foreach ($subject->getAnimation()?->getCreators() as $creator) {
+        foreach ($subject->getTimeSlot()->getEvent()->getCreators() as $creator) {
             if ($creator->getId() === $user->getId()) {
                 return true;
             }

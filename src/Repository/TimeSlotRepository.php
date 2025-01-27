@@ -37,28 +37,26 @@ class TimeSlotRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array<ScheduleAnimationState> $states
-     *
      * @return array<TimeSlot>
      */
-    public function findForEvent(Event $event, array $states): array
+    public function findForEvent(Event $event): array
     {
         return $this->getEntityManager()->createQuery(<<<DQL
             SELECT
                 time_slot,
                 event,
                 table,
-                scheduled_animations
+                scheduled_animation,
+                animation
             FROM {$this->getEntityName()} time_slot
             INNER JOIN time_slot.event event
             LEFT JOIN time_slot.table table
-            LEFT JOIN time_slot.scheduledAnimations scheduled_animations
+            LEFT JOIN time_slot.scheduledAnimations scheduled_animation
+            LEFT JOIN scheduled_animation.animation animation
             WHERE time_slot.event = :event
-            AND scheduled_animations.state IN (:states)
         DQL
         )
             ->setParameter('event', $event)
-            ->setParameter('states', $states)
             ->getResult();
     }
 }

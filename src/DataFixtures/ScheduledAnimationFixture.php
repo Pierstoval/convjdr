@@ -33,6 +33,11 @@ class ScheduledAnimationFixture extends ArrayFixture implements ORMFixtureInterf
             'timeSlot' => 'ref/timeslot-1d508edc-2963-4014-b822-32bb771d2245',
             'state' => ScheduleAnimationState::ACCEPTED,
         ],
+        'a56d09c8-b5a2-4c90-b8c3-c43b769df1bf' => [
+            'animation' => 'ref/animation-Concert',
+            'timeSlot' => 'ref/timeslot-29f08a4f-4c31-4735-9280-3eb103df1b9a',
+            'state' => ScheduleAnimationState::ACCEPTED,
+        ],
     ];
 
     protected function getEntityClass(): string

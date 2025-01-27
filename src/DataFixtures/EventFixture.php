@@ -39,8 +39,8 @@ class EventFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
             [
                 'id' => 'b715276f-f7df-42ee-82f8-c21b05d2da2d',
                 'name' => 'TDC 2025',
-                'startsAt' => (new \DateTimeImmutable('today'))->setTime(0, 0, 0, 0),
-                'endsAt' => (new \DateTimeImmutable('tomorrow'))->setTime(0, 0, 0, 0),
+                'startsAt' => (new \DateTimeImmutable('10 days'))->setTime(0, 0, 0, 0),
+                'endsAt' => (new \DateTimeImmutable('12 days'))->setTime(0, 0, 0, 0),
                 'address' => 'CPC',
                 'description' => 'Hello world',
                 'creators' => new ArrayCollection([$this->getReference('user-admin')]),

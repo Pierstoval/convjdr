@@ -24,6 +24,12 @@ class AnimationFixture extends ArrayFixture implements ORMFixtureInterface, Depe
             'maxNumberOfParticipants' => 5,
             'creators' => ['ref/user-visitor'],
         ],
+        '75df22c8-567b-4e12-b1cf-ed77b7ac00f4' => [
+            'name' => 'Concert',
+            'description' => 'Lorem ipsum',
+            'maxNumberOfParticipants' => 180,
+            'creators' => ['ref/user-admin'],
+        ],
     ];
 
     protected function getEntityClass(): string

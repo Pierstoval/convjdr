@@ -47,6 +47,23 @@ class Floor implements HasNestedRelations
         }
     }
 
+    public function getCalendarResourceJson(): array
+    {
+        $json = [
+            'id' => $this->id,
+            'title' => $this->name,
+            'children' => [],
+        ];
+
+        foreach ($this->rooms as $room) {
+            $json['children'][] = $room->getCalendarResourceJson();
+        }
+
+        return $json;
+    }
+
+    //
+
     public function getName(): string
     {
         return $this->name;

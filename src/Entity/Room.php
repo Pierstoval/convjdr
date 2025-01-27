@@ -46,6 +46,23 @@ class Room implements HasNestedRelations
         }
     }
 
+    public function getCalendarResourceJson(): array
+    {
+        $json = [
+            'id' => $this->id,
+            'title' => $this->name,
+            'children' => [],
+        ];
+
+        foreach ($this->tables as $table) {
+            $json['children'][] = $table->getCalendarResourceJson();
+        }
+
+        return $json;
+    }
+
+    //
+
     public function getName(): string
     {
         return $this->name;
@@ -95,5 +112,21 @@ class Room implements HasNestedRelations
     public function hasTable(Table $table): bool
     {
         return $this->tables->contains($table);
+    }
+
+    /**
+     * @return array<TimeSlot>
+     */
+    public function getTimeSlots(): array
+    {
+        $slots = [];
+
+        foreach ($this->tables as $table) {
+            foreach ($table->getTimeSlots() as $slot) {
+                $slots[$slot->getId()] = $slot;
+            }
+        }
+
+        return \array_values($slots);
     }
 }

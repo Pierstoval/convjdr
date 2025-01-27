@@ -1,0 +1,102 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    {{ 'Calendar'|trans }}
+{% endblock %}
+{% block content_title %}
+    {{ 'Calendar'|trans }}
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.8.0/event-calendar.min.css">
+{% endblock %}
+
+{% block main %}
+    {{ include('admin/calendar/_event_choice.html.twig', {events: events, event: event ?? null}, with_context = false) }}
+
+    <hr>
+
+    <h4>{{ 'Event:'|trans }} {{ event }}</h4>
+
+    {{ include('admin/calendar/_calendar_event_filters.html.twig', {
+        event: event,
+        filter_states: filter_states,
+    }, with_context = false) }}
+
+    {% set cols_sizes = 10 / (event.venue.floors|length) %}
+
+    <div class="container mb-4">
+
+        <div id="admin_event_calendar" style="max-width: 100%; min-height: 500px; overflow-x: scroll; border: solid 1px #444; padding: 1rem;"></div>
+
+    </div>
+
+    <div class="row text-center m-0">
+        <div class="col-2 card">
+            <div class="card-body">
+                {{ 'Hours'|trans }}
+            </div>
+        </div>
+
+        {% for floor in event.venue.floors %}
+            <div class="col-{{ cols_sizes }} card">
+                <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">{{ floor.name }}</div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
+                                {% for room in floor.rooms %}
+                                    <div class="col-{{ floor_cols_sizes }}">
+                                        {{ room.name }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {{ include('admin/calendar/_calendar_event_table.html.twig', {
+        hours: hours,
+        event: event,
+        filter_states: filter_states,
+    }, with_context = false) }}
+
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.8.0/event-calendar.min.js"></script>
+    {{ importmap('admin_calendar') }}
+
+    <script id="admin_event_calendar_data" defer>
+        let ec = new EventCalendar(document.getElementById('admin_event_calendar'), {
+            initialView: 'resourceTimelineDay',
+            view: 'resourceTimelineDay',
+            height: 'auto',
+            nowIndicator: false,
+            selectable: false,
+            editable: false,
+            eventStartEditable: false,
+            eventDurationEditable: false,
+            eventResizableFromStart: false,
+            pointer: false,
+            flexibleSlotTimeLimits: false,
+            resources: {{ json_resources|json_encode|raw }},
+            events: {{ json_schedules|json_encode|raw }},
+            date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+            highlightedDates: [
+                '{{ event.startsAt|date('Y-m-d') }}',
+                '{{ event.endsAt|date('Y-m-d') }}'
+            ],
+            validRange: {
+                start: '{{ event.startsAt|date('Y-m-d') }}',
+                end: '{{ event.endsAt|date('Y-m-d') }}',
+            }
+        });
+    </script>
+{% endblock %}

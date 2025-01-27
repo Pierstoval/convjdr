@@ -27,7 +27,7 @@ class TimeSlot
     #[ORM\ManyToOne]
     private Event $event;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'timeSlots')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     private Table $table;
@@ -56,13 +56,13 @@ class TimeSlot
         ;
     }
 
-    /**
-     * Duration is rounded to the upper hour.
-     */
-    public function getDurationInHours(): int
+    public function isInHour(int $hour): bool
     {
-        return \ceil(\abs($this->endsAt->getTimestamp() - $this->startsAt->getTimestamp()) / 60);
+        return $this->getStartsAt()->format('H') <= $hour
+            && $this->getEndsAt()->format('H') > $hour;
     }
+
+    //
 
     public function getName(): string
     {

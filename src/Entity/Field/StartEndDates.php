@@ -37,4 +37,12 @@ trait StartEndDates
     {
         $this->endsAt = $endsAt;
     }
+
+    /**
+     * Duration is rounded to the upper hour.
+     */
+    public function getDurationInHours(): int
+    {
+        return \ceil(\abs($this->endsAt->getTimestamp() - $this->startsAt->getTimestamp()) / 60);
+    }
 }

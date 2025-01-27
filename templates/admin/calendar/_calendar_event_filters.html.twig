@@ -1,0 +1,37 @@
+
+<div class="card mt-4 mb-4">
+    <div class="card-body">
+        <h5>{{ 'Filters:'|trans }}</h5>
+        <form method="get" action="{{ path('admin_calendar_event', {event_id: event.id}) }}">
+            <div class="btn-group" role="group" aria-label="Filters">
+                {% set filters_display = {
+                    'hourglass-half': constant('App\\Enum\\ScheduleAnimationState::CREATED').value,
+                    'clock': constant('App\\Enum\\ScheduleAnimationState::PENDING_REVIEW').value,
+                    'xmark': constant('App\\Enum\\ScheduleAnimationState::REFUSED').value,
+                    'check': constant('App\\Enum\\ScheduleAnimationState::ACCEPTED').value,
+                } %}
+
+                {% for icon, filter in filters_display %}
+                    <input
+                        name="filter_state[]"
+                        type="checkbox"
+                        id="filter-state-{{ filter }}"
+                        class="btn-check"
+                        value="{{ filter }}"
+                        autocomplete="off"
+                        {{ filter in filter_states ? ' checked' }}
+                    >
+                    <label class="btn btn-outline-success" for="filter-state-{{ filter }}">
+                        <i class="fa fa-{{ icon }}"></i> {{ ('scheduled_animation.state.' ~ filter)|trans }}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div class="mt-2">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fa fa-filter"></i> {{ 'apply_filters'|trans }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

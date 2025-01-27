@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: AnimationRepository::class)]
 class Animation implements HasNestedRelations
 {
-    use Field\Id { Field\Id::__construct as generateId; }
+    use Field\Id { Field\Id::__construct as private generateId; }
     use Field\Creators { Field\Creators::__construct as generateCreators; }
     use Field\Description;
 

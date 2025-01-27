@@ -2,13 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Animation;
 use App\Entity\Event;
 use App\Entity\ScheduledAnimation;
 use App\Entity\TimeSlot;
 use App\Enum\ScheduleAnimationState;
 use App\Repository\EventRepository;
-use App\Repository\TimeSlotRepository;
-use App\Repository\VenueRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,38 +22,30 @@ class CalendarController extends AbstractController
 {
     public function __construct(
         private readonly EventRepository $eventRepository,
-        private readonly TimeSlotRepository $timeSlotRepository,
-        private readonly VenueRepository $venueRepository,
         private readonly AdminContextProvider $adminContextProvider,
     ) {
     }
 
     #[Route('/admin/calendar', name: 'admin_calendar', defaults: [EA::DASHBOARD_CONTROLLER_FQCN => DashboardController::class])]
-    public function __invoke(Request $request): Response
+    public function calendarIndex(Request $request): Response
     {
         $this->adminContextProvider->getContext();
 
-        $events = $this->eventRepository->findAll();
+        $events = $this->eventRepository->findUpcoming();
 
         if ($request->query->has('event')) {
             return $this->viewCalendar($request, $events);
         }
-
-        $events = $this->eventRepository->findAll();
 
         return $this->render('admin/calendar/calendar.html.twig', [
             'events' => $events,
         ]);
     }
 
-    /**
-     * @param array<Event> $events
-     */
-    private function viewCalendar(Request $request, array $events): Response
+    #[Route('/admin/calendar/{event_id}', name: 'admin_calendar_event', defaults: [EA::DASHBOARD_CONTROLLER_FQCN => DashboardController::class])]
+    public function viewCalendar(Request $request, string $event_id): Response
     {
-        $eventId = $request->query->get('event');
-
-        $event = $this->eventRepository->find($eventId);
+        $event = $this->eventRepository->findForCalendar($event_id);
 
         if (!$event) {
             $this->addFlash('warning', 'Event not found.');
@@ -62,23 +53,36 @@ class CalendarController extends AbstractController
             return $this->redirectToRoute('admin_calendar');
         }
 
-        $venue = $this->venueRepository->findWithRelations($event->getVenue()->getId());
+        if ($request->query->has('filter_state') && !empty($filters = $request->query->all()['filter_state'])) {
+            if (!\is_array($filters)) {
+                $filters = explode(',', $filters);
+            }
+            $stateStrings = \array_map('trim', $filters);
+            $states = \array_map(static fn (string $stateStr) => ScheduleAnimationState::from($stateStr), $stateStrings);
+        } else {
+            $states = [
+                //ScheduleAnimationState::CREATED,
+                ScheduleAnimationState::PENDING_REVIEW,
+                ScheduleAnimationState::REFUSED,
+                ScheduleAnimationState::ACCEPTED,
+            ];
+        }
 
-        $states = [
-            //ScheduleAnimationState::CREATED,
-            ScheduleAnimationState::PENDING_REVIEW,
-            ScheduleAnimationState::REFUSED,
-            ScheduleAnimationState::ACCEPTED,
-        ];
-        $timeSlots = $this->timeSlotRepository->findForEvent($event, $states);
+        $timeSlots = $event->getTimeSlots();
         $hours = $this->getHours($timeSlots);
+        $events = $this->eventRepository->findUpcoming(); // For choices
 
-        return $this->render('admin/calendar/calendar.html.twig', [
+        // Calendar js data
+        $jsonResources = $event->getCalendarResourceJson();
+        $jsonSchedules = $event->getCalendarSchedulesJson();
+
+        return $this->render('admin/calendar/calendar_event.html.twig', [
             'events' => $events,
-            'venue' => $venue,
             'hours' => $hours,
-            'time_slots' => $timeSlots,
             'event' => $event,
+            'json_resources' => $jsonResources,
+            'json_schedules' => $jsonSchedules,
+            'filter_states' => \array_map(static fn (ScheduleAnimationState $state) => $state->value, $states),
         ]);
     }
 

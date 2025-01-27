@@ -33,7 +33,7 @@ class TableFixture extends ArrayFixture implements ORMFixtureInterface, Dependen
             'room' => 'ref/room-Salle entresol',
         ],
         '9f4ece41-25be-4164-9dab-01ad16fd5e73' => [
-            'name' => 'Sièges public',
+            'name' => 'Public',
             'maxNumberOfParticipants' => 280,
             'room' => 'ref/room-Scène',
         ],

@@ -15,6 +15,8 @@ class TimeSlotCrudController extends AbstractCrudController
         return TimeSlot::class;
     }
 
+    //
+
     public function configureFields(string $pageName): iterable
     {
         yield Field\TextField::new('name')->setRequired(true);

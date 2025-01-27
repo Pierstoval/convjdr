@@ -9,13 +9,7 @@
 
     <hr>
 
-    {% if event is defined %}
-        {{ include('admin/calendar/_event_view.html.twig', {
-            events: events,
-            venue: venue,
-            hours: hours,
-            time_slots: time_slots,
-            event: event,
-        }, with_context = false) }}
-    {% endif %}
+    <div class="alert alert-info">
+        <i class="fas fa-arrow-up"></i> {{ 'calendar.infobox.choose_an_event'|trans }}
+    </div>
 {% endblock %}

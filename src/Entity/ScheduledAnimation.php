@@ -65,7 +65,7 @@ class ScheduledAnimation
         $this->state = $state;
     }
 
-    public function getAnimation(): ?Animation
+    public function getAnimation(): Animation
     {
         return $this->animation;
     }

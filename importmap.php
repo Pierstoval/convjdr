@@ -20,6 +20,10 @@ return [
         'path' => './assets/admin.js',
         'entrypoint' => true,
     ],
+    'admin_calendar' => [
+        'path' => './assets/admin_calendar.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
