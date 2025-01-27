@@ -11,3 +11,7 @@
 {
     background-color: rgba(128, 128, 128, 0.16);
 }
+
+.main-content .content-wrapper h4.ec-event-title {
+    font-size: 14px !important;
+}

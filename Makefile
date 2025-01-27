@@ -73,7 +73,8 @@ fixtures: ## Add default data to the development database
 	@symfony console --env=dev doctrine:fixtures:load --no-interaction
 .PHONY: fixtures
 
-assets: ## Compile asset-map files
+assets: ## Install all assets
+	@symfony console assets:install
 	@symfony console importmap:install
 	@symfony console asset-map:compile
 .PHONY: assets

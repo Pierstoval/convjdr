@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Event;
 use App\Entity\TimeSlot;
-use App\Enum\ScheduleAnimationState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,7 +17,7 @@ class TimeSlotRepository extends ServiceEntityRepository
         parent::__construct($registry, TimeSlot::class);
     }
 
-    public function hasOverlap(TimeSlot $value): bool
+    public function hasOverlap(TimeSlot $timeSlot): bool
     {
         $result = $this->getEntityManager()->createQuery(<<<DQL
             SELECT count(time_slot) as has_overlaps
@@ -26,11 +25,13 @@ class TimeSlotRepository extends ServiceEntityRepository
             WHERE time_slot.event = :event
                 AND time_slot.startsAt < :end
                 AND time_slot.endsAt > :start
+                AND time_slot.id != :id
         DQL
         )
-            ->setParameter('start', $value->getStartsAt())
-            ->setParameter('end', $value->getEndsAt())
-            ->setParameter('event', $value->getEvent())
+            ->setParameter('id', $timeSlot->getId())
+            ->setParameter('start', $timeSlot->getStartsAt())
+            ->setParameter('end', $timeSlot->getEndsAt())
+            ->setParameter('event', $timeSlot->getEvent())
             ->getSingleScalarResult();
 
         return $result > 0;

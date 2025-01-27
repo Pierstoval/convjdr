@@ -6,7 +6,6 @@ use App\Repository\TimeSlotRepository;
 use App\Validator\NoOverlappingTimeSlot;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,10 +15,6 @@ class TimeSlot
 {
     use Field\Id { __construct as generateId; }
     use Field\StartEndDates;
-
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    #[Assert\NotBlank(message: 'Please enter a name')]
-    private ?string $name = '';
 
     #[ORM\ManyToOne]
     private TimeSlotCategory $category;
@@ -63,16 +58,6 @@ class TimeSlot
     }
 
     //
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name ?: '';
-    }
 
     public function getCategory(): TimeSlotCategory
     {
