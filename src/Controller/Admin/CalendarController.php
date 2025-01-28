@@ -63,7 +63,7 @@ class CalendarController extends AbstractController
             $states = [
                 //ScheduleAnimationState::CREATED,
                 ScheduleAnimationState::PENDING_REVIEW,
-                ScheduleAnimationState::REFUSED,
+                ScheduleAnimationState::REJECTED,
                 ScheduleAnimationState::ACCEPTED,
             ];
         }
@@ -75,6 +75,13 @@ class CalendarController extends AbstractController
         // Calendar js data
         $jsonResources = $event->getCalendarResourceJson();
         $jsonSchedules = $event->getCalendarSchedulesJson();
+
+        foreach ($jsonSchedules as $k => $schedule) {
+            if (($schedule['extendedProps']['type'] ?? '') === 'animation') {
+                $jsonSchedules[$k]['extendedProps']['can_accept'] = $this->isGranted('CAN_ACCEPT_SCHEDULE', $event->getScheduledAnimationById($schedule['id']));
+                $jsonSchedules[$k]['extendedProps']['can_reject'] = $this->isGranted('CAN_REJECT_SCHEDULE', $event->getScheduledAnimationById($schedule['id']));
+            }
+        }
 
         return $this->render('admin/calendar/calendar_event.html.twig', [
             'events' => $events,

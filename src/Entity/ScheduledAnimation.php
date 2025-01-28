@@ -38,7 +38,7 @@ class ScheduledAnimation
         return match ($this->state) {
             ScheduleAnimationState::CREATED => 'primary',
             ScheduleAnimationState::PENDING_REVIEW => 'warning text-white',
-            ScheduleAnimationState::REFUSED => 'danger',
+            ScheduleAnimationState::REJECTED => 'danger',
             ScheduleAnimationState::ACCEPTED => 'success',
         };
     }

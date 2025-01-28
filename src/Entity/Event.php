@@ -6,6 +6,7 @@ use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -45,9 +46,23 @@ class Event
         return $this->name ?: '';
     }
 
-    public function getDays(): int
+    public function getScheduledAnimationById(string $id): ScheduledAnimation
     {
-        return $this->endsAt->diff($this->startsAt)->days;
+        foreach ($this->getVenue()->getFloors() as $floor) {
+            foreach ($floor->getRooms() as $room) {
+                foreach ($room->getTables() as $table) {
+                    foreach ($table->getTimeSlots() as $slot) {
+                        foreach ($slot->getScheduledAnimations() as $scheduledAnimation) {
+                            if ($scheduledAnimation->getId() === $id) {
+                                return $scheduledAnimation;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        throw new \RuntimeException(\sprintf('Could not find schedule "%s" in Event "%s".', $id, $this->name));
     }
 
     public function getTimeSlots(): array
@@ -87,18 +102,22 @@ class Event
                         $animations = $slot->getScheduledAnimations();
                         foreach ($animations as $scheduledAnimation) {
                             $json[] = [
+                                'id' => $scheduledAnimation->getId(),
                                 'title' => $scheduledAnimation->getAnimation()->getName(),
                                 'start' => $slot->getStartsAt()->format('Y-m-d H:i:s'),
                                 'end' => $slot->getEndsAt()->format('Y-m-d H:i:s'),
                                 'resourceId' => $table->getId(),
+                                'extendedProps' => ['type' => 'animation'],
                             ];
                         }
                         if (!$animations->count()) {
                             $json[] = [
+                                'id' => $slot->getId(),
                                 'title' => '',
                                 'start' => $slot->getStartsAt()->format('Y-m-d H:i:s'),
                                 'end' => $slot->getEndsAt()->format('Y-m-d H:i:s'),
                                 'resourceId' => $table->getId(),
+                                'extendedProps' => ['type' => 'empty_slot'],
                             ];
                         }
                     }

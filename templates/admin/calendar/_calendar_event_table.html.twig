@@ -43,7 +43,7 @@
                                                         {% endif %}
                                                         {% if is_granted('CAN_REJECT_SCHEDULE', scheduled_animation) %}
                                                             <button
-                                                                data-confirm="{{ 'schedule.list.confirm_refuse'|trans }}"
+                                                                data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
                                                                 type="submit"
                                                                 class="mx-0 my-2 btn btn-small btn-danger card-link"
                                                                 formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}"

@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'timezone', type: 'string', nullable: false, options: ['default' => 'Europe/Paris'])]
     private string $timezone = 'Europe/Paris';
 
+    #[ORM\Column(name: 'locale', type: 'string', nullable: false, options: ['default' => 'fr_FR'])]
+    private string $locale = 'fr_FR';
+
     /** Used in forms, mostly, because, you know, DTOs in EasyAdmin are super annoying to do. */
     public array $formNewRoles = [];
     public ?string $formNewPassword = '';
@@ -149,5 +152,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): void
     {
         $this->isVerified = $isVerified;
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(string $timezone): void
+    {
+        $this->timezone = $timezone;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
     }
 }

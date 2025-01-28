@@ -74,6 +74,7 @@ fixtures: ## Add default data to the development database
 .PHONY: fixtures
 
 assets: ## Install all assets
+	@git clean -fdx public/assets public/bundles assets/vendor
 	@symfony console assets:install
 	@symfony console importmap:install
 	@symfony console asset-map:compile

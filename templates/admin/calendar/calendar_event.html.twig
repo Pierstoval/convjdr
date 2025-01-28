@@ -66,19 +66,78 @@
         filter_states: filter_states,
     }, with_context = false) }}
 
+    <div class="modal fade" id="event_modal" tabindex="-1" aria-labelledby="event_modal_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="event_modal_label">{{ 'Event'|trans }}</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="event_title"></h4>
+                    <p id="event_start_end">
+                         {{ 'event.startsAt.colon'|trans }} <span id="event_start"></span>
+                        <br>
+                         {{ 'event.endsAt.colon'|trans }} <span id="event_end"></span>
+                    </p>
+                    <p id="empty_slot">
+                        Empty slot!
+                    </p>
+                    <form method="post" id="accept_reject_form">
+                        <input type="hidden" name="_csrf" value="{{ csrf_token('accept_or_reject_schedule') }}">
+                            <button
+                                data-accept
+                                data-confirm="{{ 'schedule.list.confirm_accept'|trans }}"
+                                type="submit"
+                                class="mx-0 my-2 btn btn-small btn-success card-link"
+                                data-formaction-template="{{ path('admin_scheduled_animation_accept', {entityId: '-ENTITYID-'}) }}"
+                                formaction=""
+                            >
+                                <i class="fa fa-check"></i> {{ 'schedule.list.confirm_accept_short'|trans }}
+                            </button>
+                            <button
+                                data-reject
+                                data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
+                                type="submit"
+                                class="mx-0 my-2 btn btn-small btn-danger card-link"
+                                data-formaction-template="{{ path('admin_scheduled_animation_reject', {entityId: '-ENTITYID-'}) }}"
+                                formaction=""
+                            >
+                            <i class="fa fa-xmark"></i> {{ 'schedule.list.confirm_reject_short'|trans }}
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close'|trans }}</button>
+                    <button type="button" class="btn btn-primary">{{ 'Submit'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block body_javascript %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.8.0/event-calendar.min.js"></script>
-    {{ importmap('admin_calendar') }}
 
     <script id="admin_event_calendar_data" defer>
+        const eventModalElement = document.getElementById('event_modal');
+        const eventModal = new bootstrap.Modal(eventModalElement);
+
         let ec = new EventCalendar(document.getElementById('admin_event_calendar'), {
             initialView: 'resourceTimelineDay',
             view: 'resourceTimelineDay',
             height: 'auto',
             nowIndicator: false,
+            locale: '{{ app.request.locale|replace({'_': '-'}) }}',
+            eventTimeFormat: {
+                timeStyle: 'short',
+                timeZone: '{{ app.user.timezone }}'
+            },
+            slotLabelFormat: {
+                timeStyle: 'short',
+                timeZone: '{{ app.user.timezone }}'
+            },
             selectable: false,
             editable: false,
             eventStartEditable: false,
@@ -86,6 +145,29 @@
             eventResizableFromStart: false,
             pointer: false,
             flexibleSlotTimeLimits: false,
+            eventClick: function (info) {
+                console.info('eventClick:', info);
+                eventModalElement.querySelector('#event_title').innerHTML = info.event.title;
+                eventModalElement.querySelector('#event_start').innerHTML = info.event.start;
+                eventModalElement.querySelector('#event_end').innerHTML = info.event.end;
+                eventModalElement.querySelector('#empty_slot').style.display = 'none';
+
+                if (info.event.extendedProps?.type === 'animation') {
+                    if (!info.event.extendedProps?.can_reject && !info.event.extendedProps?.can_accept) {
+                        eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
+                        eventModalElement.querySelectorAll('[data-formaction-template]')
+                            .forEach(btn => btn.setAttribute('formaction', ''));
+                    } else {
+                        eventModalElement.querySelector('#accept_reject_form').style.display = undefined;
+                        eventModalElement.querySelectorAll('[data-formaction-template]')
+                            .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/-ENTITYID-/, info.event.id)));
+                    }
+                } else if (info.event.extendedProps?.type === 'empty_slot') {
+                    eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
+                    eventModalElement.querySelector('#empty_slot').style.display = 'block';
+                }
+                eventModal.show();
+            },
             resources: {{ json_resources|json_encode|raw }},
             events: {{ json_schedules|json_encode|raw }},
             date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
