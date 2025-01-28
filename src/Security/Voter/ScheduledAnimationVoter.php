@@ -10,8 +10,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 final class ScheduledAnimationVoter extends Voter
 {
-    public const CAN_ACCEPT_SCHEDULE = 'CAN_ACCEPT_SCHEDULE';
-    public const CAN_REJECT_SCHEDULE = 'CAN_REJECT_SCHEDULE';
+    public const CAN_VALIDATE_SCHEDULE = 'CAN_VALIDATE_SCHEDULE';
 
     public function __construct(private readonly AuthorizationCheckerInterface $authChecker)
     {
@@ -19,8 +18,7 @@ final class ScheduledAnimationVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return \in_array($attribute, [self::CAN_REJECT_SCHEDULE, self::CAN_ACCEPT_SCHEDULE], true)
-            && $subject instanceof ScheduledAnimation;
+        return $attribute === self::CAN_VALIDATE_SCHEDULE && $subject instanceof ScheduledAnimation;
     }
 
     /**
@@ -37,6 +35,10 @@ final class ScheduledAnimationVoter extends Voter
 
         if ($this->authChecker->isGranted('ROLE_ADMIN')) {
             return true;
+        }
+
+        if (!$subject->canChangeState()) {
+            return false;
         }
 
         foreach ($subject->getTimeSlot()->getEvent()->getCreators() as $creator) {

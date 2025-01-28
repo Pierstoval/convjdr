@@ -5,24 +5,26 @@
         <form method="get" action="{{ path('admin_calendar_event', {event_id: event.id}) }}">
             <div class="btn-group" role="group" aria-label="Filters">
                 {% set filters_display = {
-                    'hourglass-half': constant('App\\Enum\\ScheduleAnimationState::CREATED').value,
-                    'clock': constant('App\\Enum\\ScheduleAnimationState::PENDING_REVIEW').value,
-                    'xmark': constant('App\\Enum\\ScheduleAnimationState::REJECTED').value,
-                    'check': constant('App\\Enum\\ScheduleAnimationState::ACCEPTED').value,
+                    'hourglass-half': constant('App\\Enum\\ScheduleAnimationState::CREATED'),
+                    'clock': constant('App\\Enum\\ScheduleAnimationState::PENDING_REVIEW'),
+                    'xmark': constant('App\\Enum\\ScheduleAnimationState::REJECTED'),
+                    'check': constant('App\\Enum\\ScheduleAnimationState::ACCEPTED'),
                 } %}
 
                 {% for icon, filter in filters_display %}
                     <input
                         name="filter_state[]"
                         type="checkbox"
-                        id="filter-state-{{ filter }}"
+                        id="filter-state-{{ filter.value }}"
                         class="btn-check"
-                        value="{{ filter }}"
+                        value="{{ filter.value }}"
                         autocomplete="off"
-                        {{ filter in filter_states ? ' checked' }}
+                        {{ filter.value in filter_states ? ' checked' }}
                     >
-                    <label class="btn btn-outline-success" for="filter-state-{{ filter }}">
-                        <i class="fa fa-{{ icon }}"></i> {{ ('scheduled_animation.state.' ~ filter)|trans }}
+                    <label class="btn btn-outline-primary" for="filter-state-{{ filter.value }}">
+                        <span class="badge text-bg-{{ filter.cssClass}}">
+                            <i class=" fa fa-{{ icon }}"></i>
+                        </span> {{ ('scheduled_animation.state.' ~ filter.value)|trans }}
                     </label>
                 {% endfor %}
             </div>

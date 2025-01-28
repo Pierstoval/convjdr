@@ -103,11 +103,15 @@ class Event
                         foreach ($animations as $scheduledAnimation) {
                             $json[] = [
                                 'id' => $scheduledAnimation->getId(),
-                                'title' => $scheduledAnimation->getAnimation()->getName(),
+                                'title' => $scheduledAnimation->getAnimation()?->getName(),
                                 'start' => $slot->getStartsAt()->format('Y-m-d H:i:s'),
                                 'end' => $slot->getEndsAt()->format('Y-m-d H:i:s'),
                                 'resourceId' => $table->getId(),
-                                'extendedProps' => ['type' => 'animation'],
+                                'extendedProps' => [
+                                    'type' => 'animation',
+                                    'description' => $scheduledAnimation->getAnimation()?->getDescription(),
+                                ],
+                                'color' => $scheduledAnimation->getStateColor(),
                             ];
                         }
                         if (!$animations->count()) {
@@ -118,6 +122,7 @@ class Event
                                 'end' => $slot->getEndsAt()->format('Y-m-d H:i:s'),
                                 'resourceId' => $table->getId(),
                                 'extendedProps' => ['type' => 'empty_slot'],
+                                'color' => '#000',
                             ];
                         }
                     }

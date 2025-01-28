@@ -44,6 +44,9 @@ class EventRepository extends ServiceEntityRepository
             LEFT JOIN room.tables table
             LEFT JOIN table.timeSlots time_slot
             WHERE event.id = :id
+            ORDER BY table.name ASC,
+                room.name ASC,
+                floor.name ASC
         DQL
         )
             ->setParameter('id', $eventId)

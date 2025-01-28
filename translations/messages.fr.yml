@@ -1,0 +1,46 @@
+'Activities': 'Activités'
+'Administration': 'Administration'
+'Animation': 'Animation'
+'Animations': 'Animations'
+'Choose an event:': 'Choisissez un évènement :'
+'Convention organisation': 'Organisation de convention'
+'Dashboard': 'Tableau de bord'
+event.startsAt.colon: 'Début :'
+event.endsAt.colon: 'Fin :'
+'Event Venues': "Lieux d'accueil"
+'Event': 'Évènement'
+'Event:': 'Évènement :'
+'Events': 'Évènements'
+'Filters:': 'Filtres :'
+'ScheduledAnimation': 'Animation programmée'
+'State String': 'État'
+'Submit': 'Envoyer'
+'Time Slot': 'Créneau horaire'
+'Time Slots': 'Créneaux horaires'
+'Venue configurations': "Configuration des lieux d'accueil"
+'└─ Scheduled Animations': '└─ Programmation'
+'└─ Time Slot Categories': '└─ Catégories de créneaux'
+'└─── Tables': '└─── Tabless'
+'├─ Floors': '├─ Étages'
+'├── Rooms': '├── Salles'
+apply_filters: 'Appliquer les filtres'
+calendar.modal.empty_slot_add: 'Ce créneau est actuellement vide. Voulez-vous y programmer une animation ?'
+calendar.infobox.add_schedule_to_timeslot: 'Programmer une animation'
+calendar.infobox.add_timeslot: 'Ajouter un nouveau créneau horaire'
+calendar.infobox.choose_an_event: 'Choisissez un évènement dans la liste ci-dessus'
+calendar.infobox.no_timeslot_configured: "Aucun créneau horaire n'est configuré pour cette salle."
+calendar.infobox.no_upcoming_event: 'Aucun événement à venir'
+Calendar: Calendrier
+Close: Fermer
+Creators: Créateurs/créatrices
+Edit: Modifier
+Hours: Heures
+Name: Nom
+schedule.list.confirm_accept: 'Accepter ce programme?'
+schedule.list.confirm_accept_short: 'Accepter'
+schedule.list.confirm_reject: 'Rejeter ce programme?'
+schedule.list.confirm_reject_short: 'Rejeter'
+scheduled_animation.state.accepted: 'Accepté et programmé'
+scheduled_animation.state.created: 'Fraîchement créé, pas encore soumis à validation'
+scheduled_animation.state.pending_review: 'En attente de validation'
+scheduled_animation.state.rejected: 'Rejetée'

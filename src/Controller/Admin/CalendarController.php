@@ -78,8 +78,15 @@ class CalendarController extends AbstractController
 
         foreach ($jsonSchedules as $k => $schedule) {
             if (($schedule['extendedProps']['type'] ?? '') === 'animation') {
-                $jsonSchedules[$k]['extendedProps']['can_accept'] = $this->isGranted('CAN_ACCEPT_SCHEDULE', $event->getScheduledAnimationById($schedule['id']));
-                $jsonSchedules[$k]['extendedProps']['can_reject'] = $this->isGranted('CAN_REJECT_SCHEDULE', $event->getScheduledAnimationById($schedule['id']));
+                $animationObject = $event->getScheduledAnimationById($schedule['id']);
+                if (!$animationObject->canChangeState()) {
+                    continue;
+                }
+                $canBeValidated = $this->isGranted('CAN_VALIDATE_SCHEDULE', $animationObject);
+                if (!$canBeValidated) {
+                    continue;
+                }
+                $jsonSchedules[$k]['extendedProps']['can_be_validated'] = true;
             }
         }
 

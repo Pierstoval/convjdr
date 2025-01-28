@@ -60,11 +60,11 @@
         {% endfor %}
     </div>
 
-    {{ include('admin/calendar/_calendar_event_table.html.twig', {
+    {#{ include('admin/calendar/_calendar_event_table.html.twig', {
         hours: hours,
         event: event,
         filter_states: filter_states,
-    }, with_context = false) }}
+    }, with_context = false) }#}
 
     <div class="modal fade" id="event_modal" tabindex="-1" aria-labelledby="event_modal_label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -80,9 +80,6 @@
                         <br>
                          {{ 'event.endsAt.colon'|trans }} <span id="event_end"></span>
                     </p>
-                    <p id="empty_slot">
-                        Empty slot!
-                    </p>
                     <form method="post" id="accept_reject_form">
                         <input type="hidden" name="_csrf" value="{{ csrf_token('accept_or_reject_schedule') }}">
                             <button
@@ -90,7 +87,7 @@
                                 data-confirm="{{ 'schedule.list.confirm_accept'|trans }}"
                                 type="submit"
                                 class="mx-0 my-2 btn btn-small btn-success card-link"
-                                data-formaction-template="{{ path('admin_scheduled_animation_accept', {entityId: '-ENTITYID-'}) }}"
+                                data-formaction-template="{{ path('admin_scheduled_animation_accept', {entityId: '__ENTITY_ID__'}) }}"
                                 formaction=""
                             >
                                 <i class="fa fa-check"></i> {{ 'schedule.list.confirm_accept_short'|trans }}
@@ -100,7 +97,7 @@
                                 data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
                                 type="submit"
                                 class="mx-0 my-2 btn btn-small btn-danger card-link"
-                                data-formaction-template="{{ path('admin_scheduled_animation_reject', {entityId: '-ENTITYID-'}) }}"
+                                data-formaction-template="{{ path('admin_scheduled_animation_reject', {entityId: '__ENTITY_ID__'}) }}"
                                 formaction=""
                             >
                             <i class="fa fa-xmark"></i> {{ 'schedule.list.confirm_reject_short'|trans }}
@@ -108,8 +105,18 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close'|trans }}</button>
-                    <button type="button" class="btn btn-primary">{{ 'Submit'|trans }}</button>
+                    <div id="empty_slot" class="">
+                        <p>
+                            {{ 'calendar.modal.empty_slot_add'|trans }}
+                        </p>
+                        <a
+                            data-basehref="{{ path('admin_scheduled_animation_new', {slot_id: '__SLOT_ID__'}) }}"
+                            href="#"
+                            class="btn btn-primary"
+                        >
+                            <i class="fa fa-plus"></i> {{ 'calendar.infobox.add_schedule_to_timeslot'|trans }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,7 +136,7 @@
             view: 'resourceTimelineDay',
             height: 'auto',
             nowIndicator: false,
-            locale: '{{ app.request.locale|replace({'_': '-'}) }}',
+            locale: '{{ app.user.locale|replace({'_': '-'}) }}',
             eventTimeFormat: {
                 timeStyle: 'short',
                 timeZone: '{{ app.user.timezone }}'
@@ -151,33 +158,31 @@
                 eventModalElement.querySelector('#event_start').innerHTML = info.event.start;
                 eventModalElement.querySelector('#event_end').innerHTML = info.event.end;
                 eventModalElement.querySelector('#empty_slot').style.display = 'none';
+                eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
+                eventModalElement.querySelectorAll('[data-formaction-template]').forEach(btn => btn.setAttribute('formaction', ''));
 
-                if (info.event.extendedProps?.type === 'animation') {
-                    if (!info.event.extendedProps?.can_reject && !info.event.extendedProps?.can_accept) {
-                        eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
-                        eventModalElement.querySelectorAll('[data-formaction-template]')
-                            .forEach(btn => btn.setAttribute('formaction', ''));
-                    } else {
-                        eventModalElement.querySelector('#accept_reject_form').style.display = undefined;
-                        eventModalElement.querySelectorAll('[data-formaction-template]')
-                            .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/-ENTITYID-/, info.event.id)));
-                    }
+                if (info.event.extendedProps?.type === 'animation' && info.event.extendedProps?.can_be_validated) {
+                    eventModalElement.querySelector('#accept_reject_form').style.display = 'block';
+                    eventModalElement.querySelectorAll('[data-formaction-template]')
+                        .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/__ENTITY_ID__/, info.event.id)));
                 } else if (info.event.extendedProps?.type === 'empty_slot') {
-                    eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
                     eventModalElement.querySelector('#empty_slot').style.display = 'block';
+                    eventModalElement.querySelectorAll('[data-basehref]')
+                        .forEach(btn => btn.setAttribute('href', btn.getAttribute('data-basehref').replace(/__SLOT_ID__/, info.event.id)));
                 }
+
                 eventModal.show();
             },
             resources: {{ json_resources|json_encode|raw }},
             events: {{ json_schedules|json_encode|raw }},
             date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
             highlightedDates: [
-                '{{ event.startsAt|date('Y-m-d') }}',
-                '{{ event.endsAt|date('Y-m-d') }}'
+                '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+                '{{ event.endsAt|date('Y-m-d H:i:s') }}'
             ],
             validRange: {
-                start: '{{ event.startsAt|date('Y-m-d') }}',
-                end: '{{ event.endsAt|date('Y-m-d') }}',
+                start: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+                end: '{{ event.endsAt|date('Y-m-d H:i:s') }}',
             }
         });
     </script>

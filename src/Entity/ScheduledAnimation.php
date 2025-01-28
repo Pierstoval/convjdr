@@ -35,12 +35,12 @@ class ScheduledAnimation
 
     public function stateCssClass(): string
     {
-        return match ($this->state) {
-            ScheduleAnimationState::CREATED => 'primary',
-            ScheduleAnimationState::PENDING_REVIEW => 'warning text-white',
-            ScheduleAnimationState::REJECTED => 'danger',
-            ScheduleAnimationState::ACCEPTED => 'success',
-        };
+        return $this->state->getCssClass();
+    }
+
+    public function getStateColor(): string
+    {
+        return $this->state->getColor();
     }
 
     public function getStateString(): string
@@ -51,6 +51,12 @@ class ScheduledAnimation
     public function isPendingReview(): bool
     {
         return $this->state === ScheduleAnimationState::PENDING_REVIEW;
+    }
+
+    public function canChangeState(): bool
+    {
+        return $this->state === ScheduleAnimationState::CREATED
+            || $this->state === ScheduleAnimationState::PENDING_REVIEW;
     }
 
     //
@@ -65,7 +71,7 @@ class ScheduledAnimation
         $this->state = $state;
     }
 
-    public function getAnimation(): Animation
+    public function getAnimation(): ?Animation
     {
         return $this->animation;
     }

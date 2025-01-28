@@ -1,3 +1,11 @@
+{#
+
+This was a prototype, let's keep it as-is just for the sake of it.
+
+Don't use it :)
+
+#}
+
 {% set cols_sizes = 10 / (event.venue.floors|length) %}
 
 {% for hour in hours %}
@@ -31,24 +39,22 @@
                                                 <div class="card-footer bg-transparent border-success text-center">
                                                     <form method="post">
                                                         <input type="hidden" name="_csrf" value="{{ csrf_token('accept_or_reject_schedule') }}">
-                                                        {% if is_granted('CAN_ACCEPT_SCHEDULE', scheduled_animation) %}
+                                                        {% if is_granted('CAN_VALIDATE_SCHEDULE', scheduled_animation) %}
                                                             <button
                                                                 data-confirm="{{ 'schedule.list.confirm_accept'|trans }}"
                                                                 type="submit"
                                                                 class="mx-0 my-2 btn btn-small btn-success card-link"
                                                                 formaction="{{ path('admin_scheduled_animation_accept', {entityId: scheduled_animation.id}) }}"
                                                             >
-                                                                <i class="fa fa-check"></i> {{ 'Accept'|trans }}
+                                                                <i class="fa fa-check"></i> {{ 'schedule.list.confirm_accept'|trans }}
                                                             </button>
-                                                        {% endif %}
-                                                        {% if is_granted('CAN_REJECT_SCHEDULE', scheduled_animation) %}
                                                             <button
                                                                 data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
                                                                 type="submit"
                                                                 class="mx-0 my-2 btn btn-small btn-danger card-link"
                                                                 formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}"
                                                             >
-                                                                <i class="fa fa-xmark"></i> {{ 'Reject'|trans }}
+                                                                <i class="fa fa-xmark"></i> {{ 'schedule.list.confirm_reject'|trans }}
                                                             </button>
                                                         {% endif %}
                                                     </form>
