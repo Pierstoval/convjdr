@@ -2,9 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Animation;
-use App\Entity\Event;
-use App\Entity\ScheduledAnimation;
 use App\Entity\TimeSlot;
 use App\Enum\ScheduleAnimationState;
 use App\Repository\EventRepository;
@@ -74,7 +71,7 @@ class CalendarController extends AbstractController
 
         // Calendar js data
         $jsonResources = $event->getCalendarResourceJson();
-        $jsonSchedules = $event->getCalendarSchedulesJson();
+        $jsonSchedules = $event->getCalendarSchedulesJson($states);
 
         foreach ($jsonSchedules as $k => $schedule) {
             if (($schedule['extendedProps']['type'] ?? '') === 'animation') {

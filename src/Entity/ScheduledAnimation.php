@@ -33,6 +33,24 @@ class ScheduledAnimation
         return sprintf("%s (⏲ %s ➡ %s)", $this->animation, $this->timeSlot?->getStartsAt()->format('Y-m-d H:i:s'), $this->timeSlot?->getEndsAt()->format('Y-m-d H:i:s'));
     }
 
+    public function accept(): void
+    {
+        if (!$this->canChangeState()) {
+            return;
+        }
+
+        $this->state = ScheduleAnimationState::ACCEPTED;
+    }
+
+    public function reject(): void
+    {
+        if (!$this->canChangeState()) {
+            return;
+        }
+
+        $this->state = ScheduleAnimationState::REJECTED;
+    }
+
     public function stateCssClass(): string
     {
         return $this->state->getCssClass();
@@ -53,10 +71,20 @@ class ScheduledAnimation
         return $this->state === ScheduleAnimationState::PENDING_REVIEW;
     }
 
+    public function isAccepted(): bool
+    {
+        return $this->state === ScheduleAnimationState::ACCEPTED;
+    }
+
     public function canChangeState(): bool
     {
         return $this->state === ScheduleAnimationState::CREATED
             || $this->state === ScheduleAnimationState::PENDING_REVIEW;
+    }
+
+    public function getEvent(): Event
+    {
+        return $this->timeSlot->getEvent();
     }
 
     //

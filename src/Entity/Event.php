@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\ScheduleAnimationState;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
@@ -91,7 +92,11 @@ class Event
         return $json;
     }
 
-    public function getCalendarSchedulesJson(): array
+    /**
+     * @param array<ScheduleAnimationState> $states
+     * @return array
+     */
+    public function getCalendarSchedulesJson(array $states): array
     {
         $json = [];
 
@@ -101,6 +106,9 @@ class Event
                     foreach ($table->getTimeSlots() as $slot) {
                         $animations = $slot->getScheduledAnimations();
                         foreach ($animations as $scheduledAnimation) {
+                            if (!\in_array($scheduledAnimation->getState(), $states)) {
+                                continue;
+                            }
                             $json[] = [
                                 'id' => $scheduledAnimation->getId(),
                                 'title' => $scheduledAnimation->getAnimation()?->getName(),

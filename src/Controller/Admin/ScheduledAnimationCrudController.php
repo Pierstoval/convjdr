@@ -3,7 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ScheduledAnimation;
+use App\Repository\ScheduledAnimationRepository;
 use App\Repository\TimeSlotRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -15,6 +17,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,6 +29,8 @@ class ScheduledAnimationCrudController extends AbstractCrudController
     use GenericCrudMethods;
 
     public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly ScheduledAnimationRepository $scheduledAnimationRepository,
         private readonly TranslatorInterface $translator,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly RequestStack $requestStack,
@@ -31,18 +38,63 @@ class ScheduledAnimationCrudController extends AbstractCrudController
     ) {
     }
 
-    #[Route("/admin/scheduled-animation/accept/{entityId}", name: "admin_scheduled_animation_accept", methods: ['POST'])]
-    public function acceptSchedule(Request $request)
+    #[Route("/admin/scheduled-animation/accept/{id}", name: "admin_scheduled_animation_accept", methods: ['POST'])]
+    public function acceptSchedule(Request $request, string $id): Response
     {
-        $post = $request->request->all();
-        dd($post);
+        $scheduledAnimation = $this->scheduledAnimationRepository->find($id);
+        if (!$scheduledAnimation) {
+            throw new NotFoundHttpException('Scheduled animation not found with this ID.');
+        }
+
+        $csrfToken = $request->request->get('_csrf');
+        if (!$csrfToken || !$this->csrfTokenManager->isTokenValid($this->csrfTokenManager->getToken($csrfToken))) {
+            throw new BadRequestHttpException('Invalid CSRF token.');
+        }
+
+        /** @var array<ScheduledAnimation> $animationsAtSameTimeSlot */
+        $animationsAtSameTimeSlot = $this->scheduledAnimationRepository->findAtSameTimeSlot($scheduledAnimation);
+
+        foreach ($animationsAtSameTimeSlot as $otherSchedule) {
+            if ($otherSchedule->isAccepted()) {
+                $this->addFlash('error', 'Cannot accept schedule: it conflicts with another schedule at the same time and table.');
+
+                return $this->redirectToRoute('admin_calendar_event', ['event_id' => $scheduledAnimation->getEvent()->getId()]);
+            }
+            $otherSchedule->reject();
+            $this->em->persist($otherSchedule);
+        }
+        $scheduledAnimation->accept();
+
+        $this->em->persist($scheduledAnimation);
+        $this->em->flush();
+
+        return $this->redirectToRoute('admin_calendar_event', ['event_id' => $scheduledAnimation->getEvent()->getId()]);
     }
 
-    #[Route("/admin/scheduled-animation/reject/{entityId}", name: "admin_scheduled_animation_reject", methods: ['POST'])]
-    public function rejectSchedule(Request $request)
+    #[Route("/admin/scheduled-animation/reject/{id}", name: "admin_scheduled_animation_reject", methods: ['POST'])]
+    public function rejectSchedule(Request $request, string $id): Response
     {
-        $post = $request->request->all();
-        dd($post);
+        $scheduledAnimation = $this->scheduledAnimationRepository->find($id);
+        if (!$scheduledAnimation) {
+            throw new NotFoundHttpException('Scheduled animation not found with this ID.');
+        }
+
+        $csrfToken = $request->request->get('_csrf');
+        if (!$csrfToken || !$this->csrfTokenManager->isTokenValid($this->csrfTokenManager->getToken($csrfToken))) {
+            throw new BadRequestHttpException('Invalid CSRF token.');
+        }
+
+        if ($scheduledAnimation->isAccepted()) {
+            $this->addFlash('error', 'Cannot reject schedule: it was already accepted earlier.');
+
+            return $this->redirectToRoute('admin_calendar_event', ['event_id' => $scheduledAnimation->getEvent()->getId()]);
+        }
+        $scheduledAnimation->reject();
+
+        $this->em->persist($scheduledAnimation);
+        $this->em->flush();
+
+        return $this->redirectToRoute('admin_calendar_event', ['event_id' => $scheduledAnimation->getEvent()->getId()]);
     }
 
     public static function getEntityFqcn(): string

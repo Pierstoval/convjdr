@@ -32,4 +32,18 @@ class ScheduledAnimationRepository extends ServiceEntityRepository
             ->setParameter('accepted', ScheduleAnimationState::ACCEPTED)
             ->getSingleScalarResult() > 0;
     }
+
+    public function findAtSameTimeSlot(ScheduledAnimation $animation): array
+    {
+        return $this->getEntityManager()->createQuery(<<<DQL
+            SELECT scheduled_animation
+            FROM {$this->getEntityName()} scheduled_animation
+            WHERE scheduled_animation.id != :id
+            AND scheduled_animation.timeSlot = :time_slot
+        DQL
+            )
+                ->setParameter('id', $animation->getId())
+                ->setParameter('time_slot', $animation->getTimeSlot())
+                ->getResult();
+    }
 }

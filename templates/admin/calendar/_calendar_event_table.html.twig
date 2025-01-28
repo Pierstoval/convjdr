@@ -44,7 +44,7 @@ Don't use it :)
                                                                 data-confirm="{{ 'schedule.list.confirm_accept'|trans }}"
                                                                 type="submit"
                                                                 class="mx-0 my-2 btn btn-small btn-success card-link"
-                                                                formaction="{{ path('admin_scheduled_animation_accept', {entityId: scheduled_animation.id}) }}"
+                                                                formaction="{{ path('admin_scheduled_animation_accept', {id: scheduled_animation.id}) }}"
                                                             >
                                                                 <i class="fa fa-check"></i> {{ 'schedule.list.confirm_accept'|trans }}
                                                             </button>
@@ -52,7 +52,7 @@ Don't use it :)
                                                                 data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
                                                                 type="submit"
                                                                 class="mx-0 my-2 btn btn-small btn-danger card-link"
-                                                                formaction="{{ path('admin_scheduled_animation_reject', {entityId: scheduled_animation.id}) }}"
+                                                                formaction="{{ path('admin_scheduled_animation_reject', {id: scheduled_animation.id}) }}"
                                                             >
                                                                 <i class="fa fa-xmark"></i> {{ 'schedule.list.confirm_reject'|trans }}
                                                             </button>
