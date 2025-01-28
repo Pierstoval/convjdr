@@ -1,30 +1,30 @@
-'Activities': 'Activités'
-'Administration': 'Administration'
-'Animation': 'Animation'
-'Animations': 'Animations'
-'Choose an event:': 'Choisissez un évènement :'
+Activities: Activités
+Administration: Administration
+Animation: Animation
+Animations: Animations
+'Choose an event:': "Choisissez un évènement\_:"
 'Convention organisation': 'Organisation de convention'
-'Dashboard': 'Tableau de bord'
-event.startsAt.colon: 'Début :'
-event.endsAt.colon: 'Fin :'
+Dashboard: 'Tableau de bord'
+event.startsAt.colon: "Début\_:"
+event.endsAt.colon: "Fin\_:"
 'Event Venues': "Lieux d'accueil"
-'Event': 'Évènement'
-'Event:': 'Évènement :'
-'Events': 'Évènements'
-'Filters:': 'Filtres :'
-'ScheduledAnimation': 'Animation programmée'
-'State String': 'État'
-'Submit': 'Envoyer'
+Event: Évènement
+'Event:': "Évènement\_:"
+Events: Évènements
+'Filters:': "Filtres\_:"
+ScheduledAnimation: 'Animation programmée'
+'State String': État
+Submit: Envoyer
 'Time Slot': 'Créneau horaire'
 'Time Slots': 'Créneaux horaires'
 'Venue configurations': "Configuration des lieux d'accueil"
-'└─ Scheduled Animations': '└─ Programmation'
-'└─ Time Slot Categories': '└─ Catégories de créneaux'
-'└─── Tables': '└─── Tabless'
-'├─ Floors': '├─ Étages'
-'├── Rooms': '├── Salles'
+"└─\_Scheduled Animations": "└─\_Programmation"
+"└─\_Time Slot Categories": "└─\_Catégories de créneaux"
+"└───\_Tables": "└───\_Tabless"
+"├─\_Floors": "├─\_Étages"
+"├──\_Rooms": "├──\_Salles"
 apply_filters: 'Appliquer les filtres'
-calendar.modal.empty_slot_add: 'Ce créneau est actuellement vide. Voulez-vous y programmer une animation ?'
+calendar.modal.empty_slot_add: "Ce créneau est actuellement vide. Voulez-vous y programmer une animation\_?"
 calendar.infobox.add_schedule_to_timeslot: 'Programmer une animation'
 calendar.infobox.add_timeslot: 'Ajouter un nouveau créneau horaire'
 calendar.infobox.choose_an_event: 'Choisissez un évènement dans la liste ci-dessus'
@@ -37,10 +37,10 @@ Edit: Modifier
 Hours: Heures
 Name: Nom
 schedule.list.confirm_accept: 'Accepter ce programme?'
-schedule.list.confirm_accept_short: 'Accepter'
+schedule.list.confirm_accept_short: Accepter
 schedule.list.confirm_reject: 'Rejeter ce programme?'
-schedule.list.confirm_reject_short: 'Rejeter'
+schedule.list.confirm_reject_short: Rejeter
 scheduled_animation.state.accepted: 'Accepté et programmé'
 scheduled_animation.state.created: 'Fraîchement créé, pas encore soumis à validation'
 scheduled_animation.state.pending_review: 'En attente de validation'
-scheduled_animation.state.rejected: 'Rejetée'
+scheduled_animation.state.rejected: Rejetée
