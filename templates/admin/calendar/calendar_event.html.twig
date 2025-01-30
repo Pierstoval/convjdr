@@ -70,7 +70,8 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title fs-5" id="event_modal_label">{{ 'Event'|trans }}</h2>
+                    <h2 class="modal-title fs-5" id="event_modal_label">{{ 'Animation'|trans }}</h2>
+                    <h2 class="modal-title fs-5" id="slot_modal_label">{{ 'Time Slot'|trans }}</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
@@ -135,7 +136,6 @@
             initialView: 'resourceTimelineDay',
             view: 'resourceTimelineDay',
             height: 'auto',
-            nowIndicator: false,
             locale: '{{ app.user.locale|replace({'_': '-'}) }}',
             eventTimeFormat: {
                 timeStyle: 'short',
@@ -145,6 +145,7 @@
                 timeStyle: 'short',
                 timeZone: '{{ app.user.timezone }}'
             },
+            nowIndicator: false,
             selectable: false,
             editable: false,
             eventStartEditable: false,
@@ -152,20 +153,38 @@
             eventResizableFromStart: false,
             pointer: false,
             flexibleSlotTimeLimits: false,
+            dateClick: function (info) {
+                if (info.allDay) {
+                    return;
+                }
+                console.info('dateClick', info.date, info);
+            },
+            noEventsClick: function (info) {
+                console.info('noEventsClick', info);
+            },
+            select: function (info) {
+                console.info('select', info);
+            },
             eventClick: function (info) {
                 console.info('eventClick:', info);
                 eventModalElement.querySelector('#event_title').innerHTML = info.event.title;
                 eventModalElement.querySelector('#event_start').innerHTML = info.event.start;
                 eventModalElement.querySelector('#event_end').innerHTML = info.event.end;
+                eventModalElement.querySelector('#event_modal_label').style.display = 'none';
+                eventModalElement.querySelector('#slot_modal_label').style.display = 'none';
                 eventModalElement.querySelector('#empty_slot').style.display = 'none';
                 eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
                 eventModalElement.querySelectorAll('[data-formaction-template]').forEach(btn => btn.setAttribute('formaction', ''));
 
-                if (info.event.extendedProps?.type === 'animation' && info.event.extendedProps?.can_be_validated) {
-                    eventModalElement.querySelector('#accept_reject_form').style.display = 'block';
-                    eventModalElement.querySelectorAll('[data-formaction-template]')
-                        .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/__ENTITY_ID__/, info.event.id)));
+                if (info.event.extendedProps?.type === 'animation') {
+                    eventModalElement.querySelector('#event_modal_label').style.display = 'block';
+                    if (info.event.extendedProps?.can_be_validated) {
+                        eventModalElement.querySelector('#accept_reject_form').style.display = 'block';
+                        eventModalElement.querySelectorAll('[data-formaction-template]')
+                            .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/__ENTITY_ID__/, info.event.id)));
+                    }
                 } else if (info.event.extendedProps?.type === 'empty_slot') {
+                    eventModalElement.querySelector('#slot_modal_label').style.display = 'block';
                     eventModalElement.querySelector('#empty_slot').style.display = 'block';
                     eventModalElement.querySelectorAll('[data-basehref]')
                         .forEach(btn => btn.setAttribute('href', btn.getAttribute('data-basehref').replace(/__SLOT_ID__/, info.event.id)));
