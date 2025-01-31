@@ -81,7 +81,7 @@
                         <br>
                          {{ 'event.endsAt.colon'|trans }} <span id="event_end"></span>
                     </p>
-                    <form method="post" id="accept_reject_form">
+                    <form method="post" id="event_form">
                         <input type="hidden" name="_csrf" value="{{ csrf_token('accept_or_reject_schedule') }}">
                             <button
                                 data-accept
@@ -95,6 +95,14 @@
                             </button>
                             <button
                                 data-reject
+                                data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
+                                type="submit"
+                                class="mx-0 my-2 btn btn-small btn-danger card-link"
+                                data-formaction-template="{{ path('admin_scheduled_animation_reject', {id: '__ENTITY_ID__'}) }}"
+                                formaction=""
+                            >
+                            <button
+                                data-delete
                                 data-confirm="{{ 'schedule.list.confirm_reject'|trans }}"
                                 type="submit"
                                 class="mx-0 my-2 btn btn-small btn-danger card-link"
@@ -126,11 +134,13 @@
 
 {% block body_javascript %}
     {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.8.0/event-calendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.9.0/event-calendar.min.js"></script>
 
     <script id="admin_event_calendar_data" defer>
         const eventModalElement = document.getElementById('event_modal');
         const eventModal = new bootstrap.Modal(eventModalElement);
+
+        const events = {{ json_schedules|json_encode|raw }};
 
         let ec = new EventCalendar(document.getElementById('admin_event_calendar'), {
             initialView: 'resourceTimelineDay',
@@ -146,24 +156,41 @@
                 timeZone: '{{ app.user.timezone }}'
             },
             nowIndicator: false,
-            selectable: false,
+            selectable: {{ is_granted('CAN_CREATE_TIME_SLOTS_FOR_EVENT', {event: event}) ? 'true' : 'false' }},
             editable: false,
             eventStartEditable: false,
             eventDurationEditable: false,
             eventResizableFromStart: false,
-            pointer: false,
+            pointer: true,
             flexibleSlotTimeLimits: false,
-            dateClick: function (info) {
+            resources: {{ json_resources|json_encode|raw }},
+            eventSources: [
+                {events: (fetchInfo) => {
+                    console.info('events', events, 'fetchInfo', fetchInfo);
+                    return events;
+                }},
+            ],
+            date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+            highlightedDates: [
+                '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+                '{{ event.endsAt|date('Y-m-d H:i:s') }}'
+            ],
+            validRange: {
+                start: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+                end: '{{ event.endsAt|date('Y-m-d H:i:s') }}',
+            },
+            select: function (info) {
                 if (info.allDay) {
                     return;
                 }
-                console.info('dateClick', info.date, info);
-            },
-            noEventsClick: function (info) {
-                console.info('noEventsClick', info);
-            },
-            select: function (info) {
                 console.info('select', info);
+                const slot = ec.addEvent({
+                    start: info.start,
+                    end: info.end,
+                });
+                events.push(slot);
+                ec.refetchEvents();
+                console.info('created event', events.length, slot);
             },
             eventClick: function (info) {
                 console.info('eventClick:', info);
@@ -173,13 +200,13 @@
                 eventModalElement.querySelector('#event_modal_label').style.display = 'none';
                 eventModalElement.querySelector('#slot_modal_label').style.display = 'none';
                 eventModalElement.querySelector('#empty_slot').style.display = 'none';
-                eventModalElement.querySelector('#accept_reject_form').style.display = 'none';
+                eventModalElement.querySelector('#event_form').style.display = 'none';
                 eventModalElement.querySelectorAll('[data-formaction-template]').forEach(btn => btn.setAttribute('formaction', ''));
 
                 if (info.event.extendedProps?.type === 'animation') {
                     eventModalElement.querySelector('#event_modal_label').style.display = 'block';
                     if (info.event.extendedProps?.can_be_validated) {
-                        eventModalElement.querySelector('#accept_reject_form').style.display = 'block';
+                        eventModalElement.querySelector('#event_form').style.display = 'block';
                         eventModalElement.querySelectorAll('[data-formaction-template]')
                             .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/__ENTITY_ID__/, info.event.id)));
                     }
@@ -191,17 +218,6 @@
                 }
 
                 eventModal.show();
-            },
-            resources: {{ json_resources|json_encode|raw }},
-            events: {{ json_schedules|json_encode|raw }},
-            date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
-            highlightedDates: [
-                '{{ event.startsAt|date('Y-m-d H:i:s') }}',
-                '{{ event.endsAt|date('Y-m-d H:i:s') }}'
-            ],
-            validRange: {
-                start: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
-                end: '{{ event.endsAt|date('Y-m-d H:i:s') }}',
             }
         });
     </script>
