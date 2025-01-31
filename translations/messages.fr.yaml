@@ -1,44 +1,32 @@
+'Choose an event:': 'Choisissez un évènement :'
+'Event:': 'Évènement :'
+'Filters:': 'Filtres :'
 Activities: Activités
 Administration: Administration
 Animation: Animation
 Animations: Animations
-'Choose an event:': "Choisissez un évènement\_:"
-'Convention organisation': 'Organisation de convention'
-Dashboard: 'Tableau de bord'
-event.startsAt.colon: "Début\_:"
-event.endsAt.colon: "Fin\_:"
-'Event Venues': "Lieux d'accueil"
-Event: Évènement
-'Event:': "Évènement\_:"
-Events: Évènements
-'Filters:': "Filtres\_:"
-ScheduledAnimation: 'Animation programmée'
-'State String': État
-Submit: Envoyer
-'Time Slot': 'Créneau horaire'
-'Time Slots': 'Créneaux horaires'
-'Venue configurations': "Configuration des lieux d'accueil"
-"└─\_Scheduled Animations": "└─\_Programmation"
-"└─\_Time Slot Categories": "└─\_Catégories de créneaux"
-"└───\_Tables": "└───\_Tabless"
-"├─\_Floors": "├─\_Étages"
-"├──\_Rooms": "├──\_Salles"
 apply_filters: 'Appliquer les filtres'
-Save: Sauvegarder
-TimeSlot: Créneau horaire
-calendar.modal.empty_slot_add: "Ce créneau est actuellement vide. Voulez-vous y programmer une animation\_?"
 calendar.infobox.add_schedule_to_timeslot: 'Programmer une animation'
-calendar.infobox.add_timeslot: 'Ajouter un nouveau créneau horaire'
 calendar.infobox.add_timeslot.confirm: 'Sauvegarder ce créneau horaire ?'
+calendar.infobox.add_timeslot: 'Ajouter un nouveau créneau horaire'
 calendar.infobox.choose_an_event: 'Choisissez un évènement dans la liste ci-dessus'
-calendar.infobox.no_timeslot_configured: "Aucun créneau horaire n'est configuré pour cette salle."
+calendar.infobox.no_timeslot_configured: 'Aucun créneau horaire n''est configuré pour cette salle.'
 calendar.infobox.no_upcoming_event: 'Aucun événement à venir'
+calendar.modal.empty_slot_add: 'Ce créneau est actuellement vide. Voulez-vous y programmer une animation ?'
 Calendar: Calendrier
 Close: Fermer
+Convention organisation: 'Organisation de convention'
 Creators: Créateurs/créatrices
+Dashboard: 'Tableau de bord'
 Edit: Modifier
+Event Venues: 'Lieux d''accueil'
+event.endsAt.colon: 'Fin :'
+event.startsAt.colon: 'Début :'
+Event: Évènement
+Events: Évènements
 Hours: Heures
 Name: Nom
+Save: Sauvegarder
 schedule.list.confirm_accept: 'Accepter ce programme?'
 schedule.list.confirm_accept_short: Accepter
 schedule.list.confirm_reject: 'Rejeter ce programme?'
@@ -47,3 +35,15 @@ scheduled_animation.state.accepted: 'Accepté et programmé'
 scheduled_animation.state.created: 'Fraîchement créé, pas encore soumis à validation'
 scheduled_animation.state.pending_review: 'En attente de validation'
 scheduled_animation.state.rejected: Rejetée
+ScheduledAnimation: 'Animation programmée'
+State String: État
+Submit: Envoyer
+Time Slot: 'Créneau horaire'
+Time Slots: 'Créneaux horaires'
+TimeSlot: Créneau horaire
+Venue configurations: 'Configuration des lieux d''accueil'
+└─ Scheduled Animations: '└─ Programmation'
+└─ Time Slot Categories: '└─ Catégories de créneaux'
+└─── Tables: '└─── Tabless'
+├─ Floors: '├─ Étages'
+├── Rooms: '├── Salles'
