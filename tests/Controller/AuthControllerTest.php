@@ -20,7 +20,7 @@ class AuthControllerTest extends WebTestCase
         ]);
         self::assertResponseRedirects('/admin');
         $crawler = $client->followRedirect();
-        self::assertSame('Convjdr', $crawler->filter('#header-logo')->text());
+        self::assertSame('Konjider', $crawler->filter('#header-logo')->text());
     }
 
     public function testFailedLogin(): void

@@ -8,6 +8,34 @@ Don't use it :)
 
 {% set cols_sizes = 10 / (event.venue.floors|length) %}
 
+<div class="row text-center m-0">
+    <div class="col-2 card">
+        <div class="card-body">
+            {{ 'Hours'|trans }}
+        </div>
+    </div>
+
+    {% for floor in event.venue.floors %}
+        <div class="col-{{ cols_sizes }} card">
+            <div class="card-body">
+                <div class="card">
+                    <div class="card-header">{{ floor.name }}</div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% set floor_cols_sizes = 12 / (floor.rooms|length) %}
+                            {% for room in floor.rooms %}
+                                <div class="col-{{ floor_cols_sizes }}">
+                                    {{ room.name }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 {% for hour in hours %}
     <div class="row m-0">
         <div class="col-2 card text-center">

@@ -10,8 +10,8 @@
 Run this command:
 
 ```bash
-git clone git@github.com:Pierstoval/convjdr.git
-cd convjdr
+git clone git@github.com:Pierstoval/Konjider.git
+cd Konjider
 make install
 ```
 
@@ -22,7 +22,7 @@ Two users are available at first:
 * User: `admin`, password: `admin`, with full access to the backoffice
 * User: `visitor`, password: `visitor`, with limited access: this user can only access entities for which they are _"creator"_ (there's a `Creators` field in `src/Entity`, check it out).
 
-If the backoffice itself is not self-explanatory, feel free to [submit an issue](https://github.com/pierstoval/convjdr/issues/new), the goal is to make the project easy to use.
+If the backoffice itself is not self-explanatory, feel free to [submit an issue](https://github.com/pierstoval/Konjider/issues/new), the goal is to make the project easy to use.
 
 ## Licence
 

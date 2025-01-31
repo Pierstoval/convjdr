@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    {{ include('admin/calendar/_event_choice.html.twig', {events: events, event: event ?? null}, with_context = false) }}
+    {{ include('admin/calendar/_choose_event_list.html.twig', {events: events, event: event ?? null}, with_context = false) }}
 
     <hr>
 

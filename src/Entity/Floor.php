@@ -53,6 +53,9 @@ class Floor implements HasNestedRelations
             'id' => $this->id,
             'title' => $this->name,
             'children' => [],
+            'extendedProps' => [
+                'slot_type' => 'floor',
+            ],
         ];
 
         foreach ($this->rooms as $room) {

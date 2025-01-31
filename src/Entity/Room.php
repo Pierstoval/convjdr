@@ -52,6 +52,9 @@ class Room implements HasNestedRelations
             'id' => $this->id,
             'title' => $this->name,
             'children' => [],
+            'extendedProps' => [
+                'slot_type' => 'room',
+            ],
         ];
 
         foreach ($this->tables as $table) {

@@ -1,0 +1,110 @@
+
+<script id="admin_event_calendar_data" defer>
+    const eventModalElement = document.getElementById('event_modal');
+    const eventModal = new bootstrap.Modal(eventModalElement);
+
+    const events = {{ json_schedules|json_encode|raw }};
+
+    let ec = new EventCalendar(document.getElementById('admin_event_calendar'), {
+        initialView: 'resourceTimelineDay',
+        view: 'resourceTimelineDay',
+        height: 'auto',
+        locale: '{{ app.user.locale|replace({'_': '-'}) }}',
+        eventTimeFormat: {
+            timeStyle: 'short',
+            timeZone: '{{ app.user.timezone }}'
+        },
+        slotLabelFormat: {
+            timeStyle: 'short',
+            timeZone: '{{ app.user.timezone }}'
+        },
+        nowIndicator: false,
+        selectable: {{ is_granted('CAN_CREATE_TIME_SLOTS_FOR_EVENT', {event: event}) ? 'true' : 'false' }},
+        editable: false,
+        eventStartEditable: false,
+        eventDurationEditable: false,
+        eventResizableFromStart: false,
+        pointer: true,
+        flexibleSlotTimeLimits: false,
+        resources: {{ json_resources|json_encode|raw }},
+        eventSources: [{events: () => events}],
+        date: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+        highlightedDates: [
+            '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+            '{{ event.endsAt|date('Y-m-d H:i:s') }}'
+        ],
+        validRange: {
+            start: '{{ event.startsAt|date('Y-m-d H:i:s') }}',
+            end: '{{ event.endsAt|date('Y-m-d H:i:s') }}',
+        },
+        select: function (info) {
+            if (info.allDay) {
+                return;
+            }
+            console.info('select', info);
+            const slot = ec.addEvent({
+                start: info.start,
+                end: info.end,
+                resourceIds: [info.resource.id],
+                title: '⚠',
+                externalProps: {
+                    type: 'empty_slot',
+                    created: false
+                },
+            });
+            events.push(slot);
+            ec.refetchEvents();
+            console.info('created event', events.length, slot);
+        },
+        unselect: function () {
+            const latest = events[events.length - 1];
+            if (!latest) {
+                return;
+            }
+            if (latest.id.match(/\{generated-/gi)) {
+                if (latest.resourceIds.length > 1) {
+                    throw new Error('Error: more than one resource.');
+                }
+                const resourceId = latest.resourceIds[0];
+                const resources = ec.getOption('resources').filter(r => r.id === resourceId);
+                if (!resources.length) {
+                    throw new Error(`No resource with id "${resourceId}".`);
+                }
+            } else {
+                throw new Error('Apparently, ID is not a generated one and you created an event anyway: are your sure you did not hack the project? ;)');
+            }
+            console.info({latest});
+        },
+        eventClick: function (info) {
+            console.info('eventClick:', info);
+            eventModalElement.querySelector('#event_title').innerHTML = info.event.title;
+            eventModalElement.querySelector('#event_start').innerHTML = info.event.start;
+            eventModalElement.querySelector('#event_end').innerHTML = info.event.end;
+            eventModalElement.querySelector('#event_modal_label').style.display = 'none';
+            eventModalElement.querySelector('#slot_modal_label').style.display = 'none';
+            eventModalElement.querySelector('#empty_slot').style.display = 'none';
+            eventModalElement.querySelector('#event_form').style.display = 'none';
+            eventModalElement.querySelectorAll('[data-formaction-template]').forEach(btn => btn.setAttribute('formaction', ''));
+
+            if (info.event.extendedProps?.type === 'animation') {
+                eventModalElement.querySelector('#event_modal_label').style.display = 'block';
+                if (info.event.extendedProps?.can_be_validated) {
+                    eventModalElement.querySelector('#event_form').style.display = 'block';
+                    eventModalElement.querySelectorAll('[data-formaction-template]')
+                        .forEach(btn => btn.setAttribute('formaction', btn.getAttribute('data-formaction-template').replace(/__ENTITY_ID__/, info.event.id)));
+                }
+            } else if (info.event.extendedProps?.type === 'empty_slot') {
+                if (info.event.extendedProps?.created === false) {
+                    eventModalElement.querySelector('#new_slot').style.display = 'block';
+                } else {
+                    eventModalElement.querySelector('#slot_modal_label').style.display = 'block';
+                    eventModalElement.querySelector('#empty_slot').style.display = 'block';
+                    eventModalElement.querySelectorAll('[data-basehref]')
+                        .forEach(btn => btn.setAttribute('href', btn.getAttribute('data-basehref').replace(/__SLOT_ID__/, info.event.id)));
+                }
+            }
+
+            eventModal.show();
+        }
+    });
+</script>

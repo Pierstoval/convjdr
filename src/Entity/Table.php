@@ -46,6 +46,9 @@ class Table
         return [
             'id' => $this->id,
             'title' => $this->name,
+            'extendedProps' => [
+                'slot_type' => 'table',
+            ],
         ];
     }
 

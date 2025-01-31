@@ -24,9 +24,12 @@ Submit: Envoyer
 "├─\_Floors": "├─\_Étages"
 "├──\_Rooms": "├──\_Salles"
 apply_filters: 'Appliquer les filtres'
+Save: Sauvegarder
+TimeSlot: Créneau horaire
 calendar.modal.empty_slot_add: "Ce créneau est actuellement vide. Voulez-vous y programmer une animation\_?"
 calendar.infobox.add_schedule_to_timeslot: 'Programmer une animation'
 calendar.infobox.add_timeslot: 'Ajouter un nouveau créneau horaire'
+calendar.infobox.add_timeslot.confirm: 'Sauvegarder ce créneau horaire ?'
 calendar.infobox.choose_an_event: 'Choisissez un évènement dans la liste ci-dessus'
 calendar.infobox.no_timeslot_configured: "Aucun créneau horaire n'est configuré pour cette salle."
 calendar.infobox.no_upcoming_event: 'Aucun événement à venir'
